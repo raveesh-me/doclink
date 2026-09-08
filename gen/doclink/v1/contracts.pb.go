@@ -484,8 +484,8 @@ const file_doclink_v1_contracts_proto_rawDesc = "" +
 	"\bDescribe\x12\x1b.doclink.v1.DescribeRequest\x1a\x1c.doclink.v1.DescribeResponse2\xbd\x01\n" +
 	"\fLinkResolver\x12Q\n" +
 	"\fResolveLinks\x12\x1f.doclink.v1.ResolveLinksRequest\x1a .doclink.v1.ResolveLinksResponse\x12Z\n" +
-	"\x0fHandleLifecycle\x12\".doclink.v1.HandleLifecycleRequest\x1a#.doclink.v1.HandleLifecycleResponseB\x9e\x01\n" +
-	"\x0ecom.doclink.v1B\x0eContractsProtoP\x01Z3github.com/raveesh/doclink/gen/doclink/v1;doclinkv1\xa2\x02\x03DXX\xaa\x02\n" +
+	"\x0fHandleLifecycle\x12\".doclink.v1.HandleLifecycleRequest\x1a#.doclink.v1.HandleLifecycleResponseB\xa1\x01\n" +
+	"\x0ecom.doclink.v1B\x0eContractsProtoP\x01Z6github.com/raveesh-me/doclink/gen/doclink/v1;doclinkv1\xa2\x02\x03DXX\xaa\x02\n" +
 	"Doclink.V1\xca\x02\n" +
 	"Doclink\\V1\xe2\x02\x16Doclink\\V1\\GPBMetadata\xea\x02\vDoclink::V1b\x06proto3"
 

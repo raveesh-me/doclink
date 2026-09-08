@@ -8,9 +8,9 @@ import (
 	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/raveesh/doclink/gen/doclink/v1/doclinkv1connect"
-	"github.com/raveesh/doclink/internal/pg"
-	"github.com/raveesh/doclink/internal/serve"
+	"github.com/raveesh-me/doclink/gen/doclink/v1/doclinkv1connect"
+	"github.com/raveesh-me/doclink/internal/pg"
+	"github.com/raveesh-me/doclink/internal/serve"
 )
 
 func main() {

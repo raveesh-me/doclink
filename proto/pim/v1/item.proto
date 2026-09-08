@@ -4,7 +4,7 @@ package pim.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/raveesh/doclink/gen/pim/v1;pimv1";
+option go_package = "github.com/raveesh-me/doclink/gen/pim/v1;pimv1";
 
 // Item is the anchor document. Note what is absent: there is no subscription
 // column, no shipping column, and no extension bag. Adding a satellite must not

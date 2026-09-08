@@ -7,10 +7,10 @@ import (
 	"log/slog"
 
 	"connectrpc.com/connect"
-	doclinkv1 "github.com/raveesh/doclink/gen/doclink/v1"
-	shippingv1 "github.com/raveesh/doclink/gen/shipping/v1"
-	"github.com/raveesh/doclink/internal/docref"
-	"github.com/raveesh/doclink/internal/registryclient"
+	doclinkv1 "github.com/raveesh-me/doclink/gen/doclink/v1"
+	shippingv1 "github.com/raveesh-me/doclink/gen/shipping/v1"
+	"github.com/raveesh-me/doclink/internal/docref"
+	"github.com/raveesh-me/doclink/internal/registryclient"
 )
 
 const (

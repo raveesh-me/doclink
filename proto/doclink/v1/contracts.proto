@@ -5,7 +5,7 @@ package doclink.v1;
 import "doclink/v1/core.proto";
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/raveesh/doclink/gen/doclink/v1;doclinkv1";
+option go_package = "github.com/raveesh-me/doclink/gen/doclink/v1;doclinkv1";
 
 // ---------------------------------------------------------------------------
 // DocumentResolver: implemented by the service that OWNS a document type.

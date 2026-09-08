@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	doclinkv1 "github.com/raveesh/doclink/gen/doclink/v1"
+	doclinkv1 "github.com/raveesh-me/doclink/gen/doclink/v1"
 )
 
 // ErrMalformed is returned for strings that are not "<namespace>/<type>/<id>".

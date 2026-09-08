@@ -15,8 +15,8 @@ import (
 	"time"
 
 	"connectrpc.com/connect"
-	doclinkv1 "github.com/raveesh/doclink/gen/doclink/v1"
-	"github.com/raveesh/doclink/gen/doclink/v1/doclinkv1connect"
+	doclinkv1 "github.com/raveesh-me/doclink/gen/doclink/v1"
+	"github.com/raveesh-me/doclink/gen/doclink/v1/doclinkv1connect"
 )
 
 type Client struct {

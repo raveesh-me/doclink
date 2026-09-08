@@ -641,8 +641,8 @@ const file_shipping_v1_shipping_proto_rawDesc = "" +
 	"\fListProfiles\x12 .shipping.v1.ListProfilesRequest\x1a!.shipping.v1.ListProfilesResponse\x12q\n" +
 	"\x16GetAssignmentForAnchor\x12*.shipping.v1.GetAssignmentForAnchorRequest\x1a+.shipping.v1.GetAssignmentForAnchorResponse\x12V\n" +
 	"\rAssignProfile\x12!.shipping.v1.AssignProfileRequest\x1a\".shipping.v1.AssignProfileResponse\x12\\\n" +
-	"\x0fUnassignProfile\x12#.shipping.v1.UnassignProfileRequest\x1a$.shipping.v1.UnassignProfileResponseB\xa4\x01\n" +
-	"\x0fcom.shipping.v1B\rShippingProtoP\x01Z5github.com/raveesh/doclink/gen/shipping/v1;shippingv1\xa2\x02\x03SXX\xaa\x02\vShipping.V1\xca\x02\vShipping\\V1\xe2\x02\x17Shipping\\V1\\GPBMetadata\xea\x02\fShipping::V1b\x06proto3"
+	"\x0fUnassignProfile\x12#.shipping.v1.UnassignProfileRequest\x1a$.shipping.v1.UnassignProfileResponseB\xa7\x01\n" +
+	"\x0fcom.shipping.v1B\rShippingProtoP\x01Z8github.com/raveesh-me/doclink/gen/shipping/v1;shippingv1\xa2\x02\x03SXX\xaa\x02\vShipping.V1\xca\x02\vShipping\\V1\xe2\x02\x17Shipping\\V1\\GPBMetadata\xea\x02\fShipping::V1b\x06proto3"
 
 var (
 	file_shipping_v1_shipping_proto_rawDescOnce sync.Once

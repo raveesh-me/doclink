@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	subscriptionsv1 "github.com/raveesh/doclink/gen/subscriptions/v1"
-	"github.com/raveesh/doclink/internal/ids"
+	subscriptionsv1 "github.com/raveesh-me/doclink/gen/subscriptions/v1"
+	"github.com/raveesh-me/doclink/internal/ids"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

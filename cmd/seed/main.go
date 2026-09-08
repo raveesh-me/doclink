@@ -19,8 +19,8 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/raveesh/doclink/internal/ids"
-	"github.com/raveesh/doclink/internal/pg"
+	"github.com/raveesh-me/doclink/internal/ids"
+	"github.com/raveesh-me/doclink/internal/pg"
 )
 
 var (

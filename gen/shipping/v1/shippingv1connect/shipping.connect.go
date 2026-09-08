@@ -8,7 +8,7 @@ import (
 	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
-	v1 "github.com/raveesh/doclink/gen/shipping/v1"
+	v1 "github.com/raveesh-me/doclink/gen/shipping/v1"
 	http "net/http"
 	strings "strings"
 )

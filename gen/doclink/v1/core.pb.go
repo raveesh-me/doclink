@@ -335,8 +335,8 @@ const file_doclink_v1_core_proto_rawDesc = "" +
 	"\x1fRESOLUTION_STRATEGY_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dRESOLUTION_STRATEGY_FEDERATED\x10\x01\x12\x1f\n" +
 	"\x1bRESOLUTION_STRATEGY_INDEXED\x10\x02\x12 \n" +
-	"\x1cRESOLUTION_STRATEGY_MONOLITH\x10\x03B\x99\x01\n" +
-	"\x0ecom.doclink.v1B\tCoreProtoP\x01Z3github.com/raveesh/doclink/gen/doclink/v1;doclinkv1\xa2\x02\x03DXX\xaa\x02\n" +
+	"\x1cRESOLUTION_STRATEGY_MONOLITH\x10\x03B\x9c\x01\n" +
+	"\x0ecom.doclink.v1B\tCoreProtoP\x01Z6github.com/raveesh-me/doclink/gen/doclink/v1;doclinkv1\xa2\x02\x03DXX\xaa\x02\n" +
 	"Doclink.V1\xca\x02\n" +
 	"Doclink\\V1\xe2\x02\x16Doclink\\V1\\GPBMetadata\xea\x02\vDoclink::V1b\x06proto3"
 

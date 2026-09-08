@@ -657,9 +657,9 @@ const file_pim_v1_item_proto_rawDesc = "" +
 	"\n" +
 	"UpdateItem\x12\x19.pim.v1.UpdateItemRequest\x1a\x1a.pim.v1.UpdateItemResponse\x12C\n" +
 	"\n" +
-	"DeleteItem\x12\x19.pim.v1.DeleteItemRequest\x1a\x1a.pim.v1.DeleteItemResponseB}\n" +
+	"DeleteItem\x12\x19.pim.v1.DeleteItemRequest\x1a\x1a.pim.v1.DeleteItemResponseB\x80\x01\n" +
 	"\n" +
-	"com.pim.v1B\tItemProtoP\x01Z+github.com/raveesh/doclink/gen/pim/v1;pimv1\xa2\x02\x03PXX\xaa\x02\x06Pim.V1\xca\x02\x06Pim\\V1\xe2\x02\x12Pim\\V1\\GPBMetadata\xea\x02\aPim::V1b\x06proto3"
+	"com.pim.v1B\tItemProtoP\x01Z.github.com/raveesh-me/doclink/gen/pim/v1;pimv1\xa2\x02\x03PXX\xaa\x02\x06Pim.V1\xca\x02\x06Pim\\V1\xe2\x02\x12Pim\\V1\\GPBMetadata\xea\x02\aPim::V1b\x06proto3"
 
 var (
 	file_pim_v1_item_proto_rawDescOnce sync.Once

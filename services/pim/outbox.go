@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"connectrpc.com/connect"
-	doclinkv1 "github.com/raveesh/doclink/gen/doclink/v1"
-	"github.com/raveesh/doclink/gen/doclink/v1/doclinkv1connect"
-	"github.com/raveesh/doclink/internal/docref"
+	doclinkv1 "github.com/raveesh-me/doclink/gen/doclink/v1"
+	"github.com/raveesh-me/doclink/gen/doclink/v1/doclinkv1connect"
+	"github.com/raveesh-me/doclink/internal/docref"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

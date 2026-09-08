@@ -8,8 +8,8 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	pimv1 "github.com/raveesh/doclink/gen/pim/v1"
-	"github.com/raveesh/doclink/internal/ids"
+	pimv1 "github.com/raveesh-me/doclink/gen/pim/v1"
+	"github.com/raveesh-me/doclink/internal/ids"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

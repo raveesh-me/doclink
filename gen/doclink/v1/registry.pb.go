@@ -1765,8 +1765,8 @@ const file_doclink_v1_registry_proto_rawDesc = "" +
 	"\x10UpsertIndexEntry\x12#.doclink.v1.UpsertIndexEntryRequest\x1a$.doclink.v1.UpsertIndexEntryResponse\x12]\n" +
 	"\x10PublishLifecycle\x12#.doclink.v1.PublishLifecycleRequest\x1a$.doclink.v1.PublishLifecycleResponse\x12K\n" +
 	"\n" +
-	"Deregister\x12\x1d.doclink.v1.DeregisterRequest\x1a\x1e.doclink.v1.DeregisterResponseB\x9d\x01\n" +
-	"\x0ecom.doclink.v1B\rRegistryProtoP\x01Z3github.com/raveesh/doclink/gen/doclink/v1;doclinkv1\xa2\x02\x03DXX\xaa\x02\n" +
+	"Deregister\x12\x1d.doclink.v1.DeregisterRequest\x1a\x1e.doclink.v1.DeregisterResponseB\xa0\x01\n" +
+	"\x0ecom.doclink.v1B\rRegistryProtoP\x01Z6github.com/raveesh-me/doclink/gen/doclink/v1;doclinkv1\xa2\x02\x03DXX\xaa\x02\n" +
 	"Doclink.V1\xca\x02\n" +
 	"Doclink\\V1\xe2\x02\x16Doclink\\V1\\GPBMetadata\xea\x02\vDoclink::V1b\x06proto3"
 

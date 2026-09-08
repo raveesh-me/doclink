@@ -3,7 +3,7 @@ managed:
   enabled: true
   override:
     - file_option: go_package_prefix
-      value: github.com/raveesh/doclink/gen
+      value: github.com/raveesh-me/doclink/gen
 plugins:
   - local: protoc-gen-go
     out: gen

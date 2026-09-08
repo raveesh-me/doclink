@@ -7,8 +7,8 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	shippingv1 "github.com/raveesh/doclink/gen/shipping/v1"
-	"github.com/raveesh/doclink/internal/ids"
+	shippingv1 "github.com/raveesh-me/doclink/gen/shipping/v1"
+	"github.com/raveesh-me/doclink/internal/ids"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

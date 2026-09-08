@@ -618,8 +618,8 @@ const file_subscriptions_v1_subscriptions_proto_rawDesc = "" +
 	"\n" +
 	"AttachPlan\x12#.subscriptions.v1.AttachPlanRequest\x1a$.subscriptions.v1.AttachPlanResponse\x12W\n" +
 	"\n" +
-	"DetachPlan\x12#.subscriptions.v1.DetachPlanRequest\x1a$.subscriptions.v1.DetachPlanResponseB\xcc\x01\n" +
-	"\x14com.subscriptions.v1B\x12SubscriptionsProtoP\x01Z?github.com/raveesh/doclink/gen/subscriptions/v1;subscriptionsv1\xa2\x02\x03SXX\xaa\x02\x10Subscriptions.V1\xca\x02\x10Subscriptions\\V1\xe2\x02\x1cSubscriptions\\V1\\GPBMetadata\xea\x02\x11Subscriptions::V1b\x06proto3"
+	"DetachPlan\x12#.subscriptions.v1.DetachPlanRequest\x1a$.subscriptions.v1.DetachPlanResponseB\xcf\x01\n" +
+	"\x14com.subscriptions.v1B\x12SubscriptionsProtoP\x01ZBgithub.com/raveesh-me/doclink/gen/subscriptions/v1;subscriptionsv1\xa2\x02\x03SXX\xaa\x02\x10Subscriptions.V1\xca\x02\x10Subscriptions\\V1\xe2\x02\x1cSubscriptions\\V1\\GPBMetadata\xea\x02\x11Subscriptions::V1b\x06proto3"
 
 var (
 	file_subscriptions_v1_subscriptions_proto_rawDescOnce sync.Once

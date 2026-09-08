@@ -4,7 +4,7 @@ package subscriptions.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/raveesh/doclink/gen/subscriptions/v1;subscriptionsv1";
+option go_package = "github.com/raveesh-me/doclink/gen/subscriptions/v1;subscriptionsv1";
 
 // Plan lives entirely inside the subscriptions service. PIM has never heard of
 // it.

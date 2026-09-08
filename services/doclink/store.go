@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	doclinkv1 "github.com/raveesh/doclink/gen/doclink/v1"
+	doclinkv1 "github.com/raveesh-me/doclink/gen/doclink/v1"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

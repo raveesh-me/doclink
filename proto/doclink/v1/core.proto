@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package doclink.v1;
 
-option go_package = "github.com/raveesh/doclink/gen/doclink/v1;doclinkv1";
+option go_package = "github.com/raveesh-me/doclink/gen/doclink/v1;doclinkv1";
 
 // DocRef is the ONLY vocabulary shared across service boundaries.
 //

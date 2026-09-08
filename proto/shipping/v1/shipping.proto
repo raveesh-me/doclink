@@ -4,7 +4,7 @@ package shipping.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/raveesh/doclink/gen/shipping/v1;shippingv1";
+option go_package = "github.com/raveesh-me/doclink/gen/shipping/v1;shippingv1";
 
 message Profile {
   string id = 1;

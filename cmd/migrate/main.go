@@ -11,7 +11,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/raveesh/doclink/internal/pg"
+	"github.com/raveesh-me/doclink/internal/pg"
 )
 
 func main() {

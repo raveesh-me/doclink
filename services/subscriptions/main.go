@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"os"
 
-	doclinkv1 "github.com/raveesh/doclink/gen/doclink/v1"
-	"github.com/raveesh/doclink/gen/doclink/v1/doclinkv1connect"
-	"github.com/raveesh/doclink/gen/subscriptions/v1/subscriptionsv1connect"
-	"github.com/raveesh/doclink/internal/pg"
-	"github.com/raveesh/doclink/internal/registryclient"
-	"github.com/raveesh/doclink/internal/serve"
+	doclinkv1 "github.com/raveesh-me/doclink/gen/doclink/v1"
+	"github.com/raveesh-me/doclink/gen/doclink/v1/doclinkv1connect"
+	"github.com/raveesh-me/doclink/gen/subscriptions/v1/subscriptionsv1connect"
+	"github.com/raveesh-me/doclink/internal/pg"
+	"github.com/raveesh-me/doclink/internal/registryclient"
+	"github.com/raveesh-me/doclink/internal/serve"
 )
 
 func main() {

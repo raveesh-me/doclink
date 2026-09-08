@@ -5,9 +5,9 @@ import (
 	"errors"
 
 	"connectrpc.com/connect"
-	doclinkv1 "github.com/raveesh/doclink/gen/doclink/v1"
-	"github.com/raveesh/doclink/internal/docref"
-	"github.com/raveesh/doclink/internal/ids"
+	doclinkv1 "github.com/raveesh-me/doclink/gen/doclink/v1"
+	"github.com/raveesh-me/doclink/internal/docref"
+	"github.com/raveesh-me/doclink/internal/ids"
 )
 
 // registryService implements doclink.v1.RegistryService.

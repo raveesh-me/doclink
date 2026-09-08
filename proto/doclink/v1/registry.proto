@@ -6,7 +6,7 @@ import "doclink/v1/core.proto";
 import "doclink/v1/contracts.proto";
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/raveesh/doclink/gen/doclink/v1;doclinkv1";
+option go_package = "github.com/raveesh-me/doclink/gen/doclink/v1;doclinkv1";
 
 // ---------------------------------------------------------------------------
 // Declarations. The registry stores these. It never stores link rows; those

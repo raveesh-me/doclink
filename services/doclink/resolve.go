@@ -13,9 +13,9 @@ import (
 	"connectrpc.com/connect"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	doclinkv1 "github.com/raveesh/doclink/gen/doclink/v1"
-	"github.com/raveesh/doclink/gen/doclink/v1/doclinkv1connect"
-	"github.com/raveesh/doclink/internal/docref"
+	doclinkv1 "github.com/raveesh-me/doclink/gen/doclink/v1"
+	"github.com/raveesh-me/doclink/gen/doclink/v1/doclinkv1connect"
+	"github.com/raveesh-me/doclink/internal/docref"
 )
 
 // resolver answers GetLinks. The three strategies below are semantically

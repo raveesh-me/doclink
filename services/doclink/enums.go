@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	doclinkv1 "github.com/raveesh/doclink/gen/doclink/v1"
+	doclinkv1 "github.com/raveesh-me/doclink/gen/doclink/v1"
 )
 
 // Enums are stored as short strings rather than integers so the tables stay
