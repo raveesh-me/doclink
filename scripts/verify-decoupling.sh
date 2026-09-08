@@ -82,6 +82,11 @@ elif podman exec doclink-pg pg_isready -U postgres >/dev/null 2>&1; then
   out=$(podman exec doclink-pg psql -X -q -t \
         "postgres://svc_subscriptions:doclink-dev@localhost:5432/doclink" \
         -c "SELECT count(*) FROM pim.items" 2>&1 || true)
+elif [[ -n "${REQUIRE_POSTGRES:-}" ]]; then
+  # Skipping is right on a laptop with nothing running. In CI it is the worst
+  # possible outcome: a green check that silently asserted nothing. Callers that
+  # provision a database set REQUIRE_POSTGRES and get a failure instead.
+  bad "REQUIRE_POSTGRES is set but no Postgres was reachable at ${PG_HOST}:${PG_PORT}"
 else
   printf "  \033[33m–\033[0m no Postgres reachable; skipped (run: make pg)\n"
 fi

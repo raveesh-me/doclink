@@ -113,6 +113,9 @@ jobs:
           PGHOST: localhost
           PGPORT: '5432'
           SERVICE_ROLE_PASSWORD: doclink-dev
+          # Without this the script would skip the one assertion that needs a
+          # live server and still exit 0 — a green check proving nothing.
+          REQUIRE_POSTGRES: '1'
         run: ./scripts/verify-decoupling.sh
 
   web:
