@@ -177,8 +177,13 @@ jobs:
               -t doclink/$c:ci .
           done
 
-      - name: Build frontend images
+      - name: Build embed images
         run: |
-          for a in pim-web subscriptions-web shipping-web; do
+          for a in subscriptions-web shipping-web; do
             docker build -f Containerfile.frontend --build-arg APP=$a -t doclink/$a:ci .
           done
+
+      # The shell is built differently: it needs the webhost binary alongside
+      # its static output, because its CSP has to be a response header.
+      - name: Build shell image
+        run: docker build -f Containerfile.shell --build-arg TARGETARCH=amd64 -t doclink/pim-web:ci .

@@ -55,9 +55,23 @@ spec:
           image: localhost/doclink/pim-web:dev
           imagePullPolicy: IfNotPresent
           ports: [{ containerPort: 8080, name: http }]
+          env:
+            - name: DOCLINK_ENDPOINT
+              value: http://doclink:8080
+            - name: EXTENSION_POINT
+              value: pim/item:detail.card
+            # PIM's own backends, browser-facing. These are PIM's dependencies,
+            # so PIM is allowed to know them.
+            - name: CONNECT_ORIGINS
+              value: http://doclink-api.doclink.localhost:18080,http://pim-api.doclink.localhost:18080
+            # The trust boundary the registry cannot write. Any satellite behind
+            # this ingress is frameable with no per-satellite configuration; a
+            # registry row pointing anywhere else is dropped and logged.
+            - name: ALLOWED_EMBED_ORIGINS
+              value: http://*.doclink.localhost
           volumeMounts:
             - name: config
-              mountPath: /usr/share/nginx/html/config.js
+              mountPath: /srv/config.js
               subPath: config.js
           readinessProbe:
             httpGet: { path: /healthz, port: 8080 }

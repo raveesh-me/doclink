@@ -149,6 +149,47 @@ The demonstration that the contract holds is in the repo: the shell and the
 subscriptions card are Vue, and the **shipping card is plain TypeScript with no
 framework at all**. The host cannot tell the difference.
 
+## What the shell knows, and the trust boundary
+
+Grep the shell's source for satellite names and you find nothing outside
+comments — `make verify` asserts it. The shell hardcodes three things: a client
+for its own backend, a client for the registry, and the id of the slot *it
+declares*. Everything else arrives from `ListContributions` at page load, and
+`EmbedCard` mounts whatever URL comes back.
+
+So the shell knows a *category* exists, not which members. Same relationship as
+an interface to its implementations.
+
+That leaves one real hole, which `services/webhost` closes. A CSP has to be a
+response header — a `<meta http-equiv>` tag cannot work, because the origin list
+is only known after asking the registry and a CSP meta tag inserted after parse
+is ignored. So a small Go server sits in front of the shell's static build and
+computes the header:
+
+```
+connect-src   'self' + PIM's own API origins    ← configuration; PIM's own deps
+frame-src     registry contributions ∩ ALLOWED_EMBED_ORIGINS
+```
+
+The intersection is the part that matters. Deriving `frame-src` purely from the
+registry would be theatre: a rogue registry row would add its own origin to the
+policy meant to constrain it. So registry origins are filtered through a pattern
+list supplied by deployment configuration, which the registry cannot write.
+
+`http://*.doclink.localhost` covers every satellite behind the ingress with no
+per-satellite entry, so the decoupling survives — a new module still needs zero
+configuration anywhere. A row pointing somewhere else is dropped, logged at
+ERROR, and the browser refuses to frame it:
+
+```
+Framing 'http://evil.example.com/' violates the following Content Security Policy
+directive: "frame-src http://localhost:5182 http://localhost:5183".
+```
+
+When the registry has never answered, `frame-src` is `'none'` — fail closed. That
+costs nothing, because the shell discovers its cards through the same call: a
+registry that cannot answer already means there are no cards to frame.
+
 ## Read strategies, and what the benchmark found
 
 `GetLinks` answers the same question three ways:

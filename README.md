@@ -121,6 +121,7 @@ proto/            the contracts — start with doclink/v1/core.proto
   doclink/v1/     DocRef, the registry, and the two interfaces satellites implement
 services/
   doclink/        the registry: declarations, fan-out, lifecycle dispatch
+  webhost/        serves the shell and computes its Content-Security-Policy
   pim/            the anchor: items, DocumentResolver, transactional outbox
   subscriptions/  a satellite: many-to-many, owns its linkage table
   shipping/       a satellite: many-to-one, owns its linkage table
@@ -168,8 +169,8 @@ This is a POC, and the following are knowingly absent:
 - **No authentication or authorization anywhere.** In particular `Deregister` is
   unauthenticated, and anything that can call it can make a satellite vanish from
   every item screen at once.
-- **CORS is wide open.** In production the allowlist would be derived from
-  registered contribution origins.
+- **CORS is wide open.** The CSP constrains what the shell will *frame*
+  (`services/webhost`), but the APIs still accept any origin.
 - **Credentials are checked in** (`deploy/manifests/01-secrets.yaml`) so that
   `make cluster` is one command and nothing about what services can reach is
   hidden.

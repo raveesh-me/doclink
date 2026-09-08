@@ -109,6 +109,20 @@ else
 fi
 
 echo
+echo "Embeddable origins must be constrained by config the registry cannot write."
+if grep -q 'ALLOWED_EMBED_ORIGINS' deploy/manifests/04-web.yaml; then
+  ok "the shell deployment sets ALLOWED_EMBED_ORIGINS"
+else
+  bad "no ALLOWED_EMBED_ORIGINS in the shell deployment: frame-src would be derived"
+  bad "  purely from the registry, so a rogue row would allow its own origin"
+fi
+if grep -qE 'allowedPatterns|p\.allowed\(' services/webhost/csp.go; then
+  ok "webhost filters registry origins through the configured allowlist"
+else
+  bad "webhost no longer filters registry origins"
+fi
+
+echo
 echo "The host must never postMessage to a wildcard origin with domain data."
 if grep -n 'postMessage(' web/host-sdk/src/host.ts | grep -q '"\*"'; then
   bad "host.ts posts to a wildcard origin"

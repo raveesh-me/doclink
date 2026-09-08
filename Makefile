@@ -11,7 +11,8 @@ PG_PORT      ?= 5433
 KIND_CLUSTER ?= doclink
 NAMESPACE    ?= doclink
 GO_SERVICES  := doclink pim subscriptions shipping
-WEB_APPS     := pim-web subscriptions-web shipping-web
+EMBED_APPS   := subscriptions-web shipping-web
+WEB_APPS     := pim-web $(EMBED_APPS)
 TAG          ?= dev
 
 dsn = postgres://$(1):doclink-dev@localhost:$(PG_PORT)/doclink?sslmode=disable
@@ -117,10 +118,12 @@ images: ## Build all seven container images with podman
 		echo "==> doclink/$$c:$(TAG)"; \
 		podman build -f Containerfile.backend --build-arg SERVICE=cmd/$$c \
 			-t doclink/$$c:$(TAG) . || exit 1; done
-	@for a in $(WEB_APPS); do \
+	@for a in $(EMBED_APPS); do \
 		echo "==> doclink/$$a:$(TAG)"; \
 		podman build -f Containerfile.frontend --build-arg APP=$$a \
 			-t doclink/$$a:$(TAG) . || exit 1; done
+	@echo "==> doclink/pim-web:$(TAG) (static build + CSP webhost)"
+	@podman build -f Containerfile.shell -t doclink/pim-web:$(TAG) .
 
 .PHONY: kind-up
 kind-up: ## Create the kind cluster and install ingress + CNPG
