@@ -64,19 +64,35 @@ done
 
 echo
 echo "Postgres must enforce the schema boundary, not convention."
-PG_PORT="${PG_PORT:-5433}"
-if podman exec doclink-pg pg_isready -U postgres >/dev/null 2>&1; then
+# Reachable two ways: a psql on PATH talking to PGHOST/PGPORT (how CI runs it,
+# against a service container), or the podman container from `make pg` (how a
+# laptop runs it). Skipped rather than failed when neither is up, so the other
+# ten checks still run in a bare checkout.
+PG_HOST="${PGHOST:-localhost}"
+PG_PORT="${PGPORT:-5433}"
+DENIED_DSN="postgres://svc_subscriptions:${SERVICE_ROLE_PASSWORD:-doclink-dev}@${PG_HOST}:${PG_PORT}/doclink"
+
+probe() { psql -X -q -t "$1" -c "SELECT count(*) FROM pim.items" 2>&1; }
+
+out=""
+if command -v psql >/dev/null 2>&1 && pg_isready -h "$PG_HOST" -p "$PG_PORT" >/dev/null 2>&1; then
+  out=$(probe "$DENIED_DSN" || true)
+elif podman exec doclink-pg pg_isready -U postgres >/dev/null 2>&1; then
+  # Inside the container Postgres is on its own 5432, not the host mapping.
   out=$(podman exec doclink-pg psql -X -q -t \
         "postgres://svc_subscriptions:doclink-dev@localhost:5432/doclink" \
         -c "SELECT count(*) FROM pim.items" 2>&1 || true)
+else
+  printf "  \033[33m–\033[0m no Postgres reachable; skipped (run: make pg)\n"
+fi
+
+if [[ -n "$out" ]]; then
   if grep -q "permission denied" <<<"$out"; then
     ok "svc_subscriptions is denied read access to pim.items"
   else
     bad "svc_subscriptions could read pim.items — role isolation is not in effect"
     echo "      $out"
   fi
-else
-  printf "  \033[33m–\033[0m local Postgres not running; skipped (run: make pg)\n"
 fi
 
 echo

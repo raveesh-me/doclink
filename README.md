@@ -35,6 +35,23 @@ make verify      # assert the architectural rules
 make dev-stop    # stop everything
 ```
 
+## CI
+
+`.github/workflows/ci.yml` runs five jobs on every push and pull request:
+
+| job | what it catches |
+|---|---|
+| `go` | gofmt, `go vet`, build, `go test -race` |
+| `protos` | `buf lint`, and that committed generated code still matches the protos |
+| `verify` | the architectural rules, against a real Postgres service container |
+| `web` | typechecks all three frontends (`vite build` does not typecheck) and builds them |
+| `images` | all nine container images build |
+
+The `verify` job is the one worth keeping. Ten of its eleven assertions are
+static, but the role-isolation check needs a live server to prove Postgres
+actually refuses a cross-schema read — so the job runs one, migrates it, and
+asserts the refusal.
+
 ### In a cluster
 
 ```bash
