@@ -1,0 +1,11 @@
+{
+  "name": "@doclink/gen",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.2.0"
+  }
+}

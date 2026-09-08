@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package pim.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/raveesh/doclink/gen/pim/v1;pimv1";
+
+// Item is the anchor document. Note what is absent: there is no subscription
+// column, no shipping column, and no extension bag. Adding a satellite must not
+// change this message.
+message Item {
+  string id = 1;
+  string sku = 2;
+  string title = 3;
+  string description = 4;
+  int64 price_cents = 5;
+  string currency = 6;
+  string status = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+message GetItemRequest { string id = 1; }
+message GetItemResponse { Item item = 1; }
+
+message ListItemsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string query = 3;
+}
+message ListItemsResponse {
+  repeated Item items = 1;
+  string next_page_token = 2;
+  int32 total = 3;
+}
+
+message CreateItemRequest { Item item = 1; }
+message CreateItemResponse { Item item = 1; }
+
+message UpdateItemRequest { Item item = 1; }
+message UpdateItemResponse { Item item = 1; }
+
+message DeleteItemRequest { string id = 1; }
+message DeleteItemResponse {
+  // Lifecycle event id written to the outbox in the same transaction.
+  string event_id = 1;
+}
+
+service ItemService {
+  rpc GetItem(GetItemRequest) returns (GetItemResponse);
+  rpc ListItems(ListItemsRequest) returns (ListItemsResponse);
+  rpc CreateItem(CreateItemRequest) returns (CreateItemResponse);
+  rpc UpdateItem(UpdateItemRequest) returns (UpdateItemResponse);
+  rpc DeleteItem(DeleteItemRequest) returns (DeleteItemResponse);
+}

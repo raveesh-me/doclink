@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Subscriptions — item card</title>
+    <!-- Points only at the subscriptions backend. The card never talks to PIM
+         or to the registry: it has an item DocRef and its own linkage table,
+         and that is sufficient. -->
+    <script src="/config.js"></script>
+  </head>
+  <body>
+    <div id="card"></div>
+    <script type="module" src="/src/embed-main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+# Populates all three representations with identical data. Run after the
+# services are up so the registry has a fan-out plan to be measured against.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: doclink-seed
+  namespace: doclink
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels: { app: doclink-seed }
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: seed
+          image: localhost/doclink/seed:dev
+          imagePullPolicy: IfNotPresent
+          args: ["-items", "2000"]
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef: { name: service-roles, key: password }
+            - name: BENCH_DSN
+              value: postgres://svc_bench@doclink-pg-rw:5432/doclink?sslmode=disable
+          resources:
+            requests: { cpu: 100m, memory: 64Mi }

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIM — doc-link</title>
+    <!--
+      Runtime configuration, not build-time. The same built bundle runs against
+      localhost during development and against cluster hostnames in kind; the
+      deployment overwrites this one script tag via a ConfigMap.
+
+      Note what is NOT here: any mention of subscriptions or shipping. The shell
+      learns its cards from the registry at page load.
+    -->
+    <script src="/config.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

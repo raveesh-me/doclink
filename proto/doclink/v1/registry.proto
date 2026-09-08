@@ -1,0 +1,205 @@
+syntax = "proto3";
+
+package doclink.v1;
+
+import "doclink/v1/core.proto";
+import "doclink/v1/contracts.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/raveesh/doclink/gen/doclink/v1;doclinkv1";
+
+// ---------------------------------------------------------------------------
+// Declarations. The registry stores these. It never stores link rows; those
+// live in the satellite that owns them.
+// ---------------------------------------------------------------------------
+
+// DocumentType is registered by the service that OWNS the document. Registering
+// a type is what makes a namespace/type resolvable by strangers.
+message DocumentType {
+  string namespace = 1;
+  string type = 2;
+  string display_name = 3;
+  // Base URL of the owner's ConnectRPC endpoint implementing DocumentResolver.
+  string resolver_endpoint = 4;
+  google.protobuf.Timestamp registered_at = 5;
+}
+
+// ExtensionPoint is declared by the owner of a screen. It is a promise about
+// what the host will pass in, and it is deliberately tiny: the anchor DocRef.
+//
+// The host does NOT declare who may fill the slot. It cannot know.
+message ExtensionPoint {
+  // Stable id, "<namespace>/<type>:<slot>", e.g. "pim/item:detail.card".
+  string id = 1;
+  // Document type the slot is anchored on.
+  DocRef anchor_type = 2;
+  string display_name = 3;
+  string description = 4;
+  google.protobuf.Timestamp registered_at = 5;
+}
+
+// EmbedKind is how the host mounts a contribution's UI.
+enum EmbedKind {
+  EMBED_KIND_UNSPECIFIED = 0;
+  // Cross-origin iframe driven by the host SDK over postMessage. The default:
+  // separate JS realm, independent deploy, framework-agnostic.
+  EMBED_KIND_IFRAME = 1;
+  // ES module exporting a custom element, imported from the satellite origin.
+  // Shared realm; kept as a comparison case, not a recommendation.
+  EMBED_KIND_CUSTOM_ELEMENT = 2;
+}
+
+// Contribution is a satellite saying "I fill this slot". The host learns of it
+// only by asking the registry at runtime.
+message Contribution {
+  string id = 1;
+  // Extension point being filled.
+  string extension_point_id = 2;
+  // Namespace of the contributing service.
+  string namespace = 3;
+  string title = 4;
+  // Emoji or short glyph. Keeps the POC free of an icon pipeline.
+  string icon = 5;
+  EmbedKind embed_kind = 6;
+  // Absolute URL of the iframe document, or of the ES module.
+  string embed_url = 7;
+  // Base URL of the contributor's ConnectRPC endpoint implementing
+  // LinkResolver. Used for the card's summary badge before it is mounted.
+  string service_endpoint = 8;
+  // Ordering hint. Ties broken by title.
+  int32 weight = 9;
+  google.protobuf.Timestamp registered_at = 10;
+}
+
+// LinkTypeDecl declares that a satellite holds a traversable edge. The registry
+// records that the edge exists and who to ask. The rows stay with the satellite.
+message LinkTypeDecl {
+  string id = 1;
+  // Document type the link points AT (the anchor, e.g. pim/item). Only
+  // namespace and type are meaningful.
+  DocRef anchor_type = 2;
+  // Document type the link points FROM (owned by the declaring service).
+  DocRef source_type = 3;
+  // Human-readable predicate, e.g. "covers", "ships_via".
+  string predicate = 4;
+  Cardinality cardinality = 5;
+  // Declaring service's LinkResolver endpoint.
+  string resolver_endpoint = 6;
+  // Whether this service wants lifecycle events for the anchor type.
+  bool subscribes_to_lifecycle = 7;
+  google.protobuf.Timestamp registered_at = 8;
+}
+
+// ---------------------------------------------------------------------------
+// Registry RPCs
+// ---------------------------------------------------------------------------
+
+message RegisterDocumentTypeRequest { DocumentType document_type = 1; }
+message RegisterDocumentTypeResponse { DocumentType document_type = 1; }
+
+message RegisterExtensionPointRequest { ExtensionPoint extension_point = 1; }
+message RegisterExtensionPointResponse { ExtensionPoint extension_point = 1; }
+
+message RegisterContributionRequest { Contribution contribution = 1; }
+message RegisterContributionResponse { Contribution contribution = 1; }
+
+message RegisterLinkTypeRequest { LinkTypeDecl link_type = 1; }
+message RegisterLinkTypeResponse { LinkTypeDecl link_type = 1; }
+
+message ListContributionsRequest {
+  string extension_point_id = 1;
+}
+message ListContributionsResponse {
+  repeated Contribution contributions = 1;
+}
+
+message ListLinkTypesRequest {
+  // Optional filter by anchor namespace/type.
+  DocRef anchor_type = 1;
+}
+message ListLinkTypesResponse { repeated LinkTypeDecl link_types = 1; }
+
+message ResolveDocumentsRequest { repeated DocRef refs = 1; }
+message ResolveDocumentsResponse { repeated DocSummary summaries = 1; }
+
+// LinkGroup is one satellite's answer about one anchor.
+message LinkGroup {
+  string namespace = 1;
+  string predicate = 2;
+  Cardinality cardinality = 3;
+  repeated DocSummary documents = 4;
+  // Wall time the registry spent obtaining this group. Populated for benchmarks.
+  int64 resolve_micros = 5;
+  // Set when the satellite failed. The rest of the response is still returned:
+  // one satellite being down must not blank the item screen.
+  string error = 6;
+}
+
+message GetLinksRequest {
+  DocRef anchor = 1;
+  ResolutionStrategy strategy = 2;
+  // When true, skip DocSummary hydration and return refs only.
+  bool refs_only = 3;
+}
+message GetLinksResponse {
+  DocRef anchor = 1;
+  repeated LinkGroup groups = 2;
+  ResolutionStrategy strategy = 3;
+  int64 total_micros = 4;
+  // Number of outbound RPCs the registry made to answer. Zero for INDEXED and
+  // MONOLITH; equals the satellite count for FEDERATED.
+  int32 fanout_rpcs = 5;
+}
+
+// Index maintenance, used only by the INDEXED strategy. Satellites call this
+// after their own writes commit. Deliberately fire-and-forget: the index is a
+// cache, not a source of truth.
+message UpsertIndexEntryRequest {
+  DocRef anchor = 1;
+  DocRef source = 2;
+  string predicate = 3;
+  Cardinality cardinality = 4;
+  // When true, remove instead of insert.
+  bool deleted = 5;
+}
+message UpsertIndexEntryResponse { int64 sequence = 1; }
+
+// Deregistration. A service being decommissioned must be able to remove itself
+// from the fan-out plan, or every later GetLinks pays for a dead endpoint's
+// timeout. The benchmark harness relies on this to clean up its synthetic
+// satellites.
+message DeregisterRequest {
+  // Any of these that are set are removed. Unknown ids are not an error.
+  string link_type_id = 1;
+  string contribution_id = 2;
+  string document_type_key = 3;
+}
+message DeregisterResponse { int32 removed = 1; }
+
+// PublishLifecycle is called by an anchor owner's outbox relay. The registry is
+// the only component that knows who subscribes, so the anchor hands the event
+// over and is done: it never learns which services, or how many, cared.
+message PublishLifecycleRequest { LifecycleEvent event = 1; }
+message PublishLifecycleResponse {
+  // Subscribers the event was queued for. The anchor logs this and nothing more.
+  int32 subscribers = 1;
+}
+
+service RegistryService {
+  rpc RegisterDocumentType(RegisterDocumentTypeRequest) returns (RegisterDocumentTypeResponse);
+  rpc RegisterExtensionPoint(RegisterExtensionPointRequest) returns (RegisterExtensionPointResponse);
+  rpc RegisterContribution(RegisterContributionRequest) returns (RegisterContributionResponse);
+  rpc RegisterLinkType(RegisterLinkTypeRequest) returns (RegisterLinkTypeResponse);
+
+  rpc ListContributions(ListContributionsRequest) returns (ListContributionsResponse);
+  rpc ListLinkTypes(ListLinkTypesRequest) returns (ListLinkTypesResponse);
+
+  rpc ResolveDocuments(ResolveDocumentsRequest) returns (ResolveDocumentsResponse);
+  rpc GetLinks(GetLinksRequest) returns (GetLinksResponse);
+
+  rpc UpsertIndexEntry(UpsertIndexEntryRequest) returns (UpsertIndexEntryResponse);
+
+  rpc PublishLifecycle(PublishLifecycleRequest) returns (PublishLifecycleResponse);
+
+  rpc Deregister(DeregisterRequest) returns (DeregisterResponse);
+}

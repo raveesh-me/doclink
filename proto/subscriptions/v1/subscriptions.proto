@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package subscriptions.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/raveesh/doclink/gen/subscriptions/v1;subscriptionsv1";
+
+// Plan lives entirely inside the subscriptions service. PIM has never heard of
+// it.
+message Plan {
+  string id = 1;
+  string name = 2;
+  string interval = 3;          // "weekly" | "monthly" | "quarterly"
+  int32 discount_bps = 4;       // basis points off the item price
+  int32 min_cycles = 5;
+  google.protobuf.Timestamp created_at = 6;
+}
+
+// Coverage is the linkage row. It points at an item by DocRef string and by
+// nothing else. There is no foreign key, and cannot be: the item lives in a
+// different database owned by a different team.
+message Coverage {
+  string id = 1;
+  string plan_id = 2;
+  // Canonical DocRef string, "pim/item/<id>".
+  string anchor_ref = 3;
+  // Satellite-owned data ABOUT the item that PIM must never carry.
+  int32 max_quantity_per_cycle = 4;
+  bool prepaid_only = 5;
+  google.protobuf.Timestamp created_at = 6;
+}
+
+message ListPlansRequest {}
+message ListPlansResponse { repeated Plan plans = 1; }
+
+// Everything below takes an anchor_ref and nothing else. This is the shape the
+// embedded card talks to: it receives one item DocRef from the host and must
+// derive its whole world from that.
+message ListCoverageForAnchorRequest { string anchor_ref = 1; }
+message ListCoverageForAnchorResponse {
+  repeated Coverage coverage = 1;
+  repeated Plan plans = 2;
+}
+
+message AttachPlanRequest {
+  string anchor_ref = 1;
+  string plan_id = 2;
+  int32 max_quantity_per_cycle = 3;
+  bool prepaid_only = 4;
+}
+message AttachPlanResponse { Coverage coverage = 1; }
+
+message DetachPlanRequest { string coverage_id = 1; }
+message DetachPlanResponse {}
+
+service SubscriptionsService {
+  rpc ListPlans(ListPlansRequest) returns (ListPlansResponse);
+  rpc ListCoverageForAnchor(ListCoverageForAnchorRequest) returns (ListCoverageForAnchorResponse);
+  rpc AttachPlan(AttachPlanRequest) returns (AttachPlanResponse);
+  rpc DetachPlan(DetachPlanRequest) returns (DetachPlanResponse);
+}

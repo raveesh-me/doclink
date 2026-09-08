@@ -1,0 +1,153 @@
+# The three frontends. Each gets its own Deployment, its own Service, and — via
+# the Ingress — its own hostname, which is what makes the iframe isolation real
+# rather than decorative: a same-origin embed would share a JS realm with the
+# host and the sandbox attribute would be theatre.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pim-web-config
+  namespace: doclink
+data:
+  config.js: |
+    // Browser-facing URLs, so ingress hostnames rather than Service names.
+    // There is deliberately no satellite URL here: the shell asks the registry.
+    window.__DOCLINK_CONFIG__ = {
+      doclink: "http://doclink-api.doclink.localhost:18080",
+      pim: "http://pim-api.doclink.localhost:18080",
+    };
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: subscriptions-web-config
+  namespace: doclink
+data:
+  config.js: |
+    window.__SUBSCRIPTIONS_CONFIG__ = {
+      subscriptions: "http://subs-api.doclink.localhost:18080",
+    };
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shipping-web-config
+  namespace: doclink
+data:
+  config.js: |
+    window.__SHIPPING_CONFIG__ = {
+      shipping: "http://ship-api.doclink.localhost:18080",
+    };
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pim-web
+  namespace: doclink
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: pim-web } }
+  template:
+    metadata:
+      labels: { app: pim-web }
+    spec:
+      containers:
+        - name: web
+          image: localhost/doclink/pim-web:dev
+          imagePullPolicy: IfNotPresent
+          ports: [{ containerPort: 8080, name: http }]
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/nginx/html/config.js
+              subPath: config.js
+          readinessProbe:
+            httpGet: { path: /healthz, port: 8080 }
+            initialDelaySeconds: 2
+          resources:
+            requests: { cpu: 20m, memory: 32Mi }
+            limits: { memory: 128Mi }
+      volumes:
+        - name: config
+          configMap: { name: pim-web-config }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: pim-web, namespace: doclink }
+spec:
+  selector: { app: pim-web }
+  ports: [{ port: 8080, targetPort: 8080 }]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subscriptions-web
+  namespace: doclink
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: subscriptions-web } }
+  template:
+    metadata:
+      labels: { app: subscriptions-web }
+    spec:
+      containers:
+        - name: web
+          image: localhost/doclink/subscriptions-web:dev
+          imagePullPolicy: IfNotPresent
+          ports: [{ containerPort: 8080, name: http }]
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/nginx/html/config.js
+              subPath: config.js
+          readinessProbe:
+            httpGet: { path: /healthz, port: 8080 }
+            initialDelaySeconds: 2
+          resources:
+            requests: { cpu: 20m, memory: 32Mi }
+            limits: { memory: 128Mi }
+      volumes:
+        - name: config
+          configMap: { name: subscriptions-web-config }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: subscriptions-web, namespace: doclink }
+spec:
+  selector: { app: subscriptions-web }
+  ports: [{ port: 8080, targetPort: 8080 }]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipping-web
+  namespace: doclink
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: shipping-web } }
+  template:
+    metadata:
+      labels: { app: shipping-web }
+    spec:
+      containers:
+        - name: web
+          image: localhost/doclink/shipping-web:dev
+          imagePullPolicy: IfNotPresent
+          ports: [{ containerPort: 8080, name: http }]
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/nginx/html/config.js
+              subPath: config.js
+          readinessProbe:
+            httpGet: { path: /healthz, port: 8080 }
+            initialDelaySeconds: 2
+          resources:
+            requests: { cpu: 20m, memory: 32Mi }
+            limits: { memory: 128Mi }
+      volumes:
+        - name: config
+          configMap: { name: shipping-web-config }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: shipping-web, namespace: doclink }
+spec:
+  selector: { app: shipping-web }
+  ports: [{ port: 8080, targetPort: 8080 }]
