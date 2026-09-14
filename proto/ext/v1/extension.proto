@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package ext.v1;
+
+import "google/protobuf/struct.proto";
+import "pim/v1/pim.proto";
+
+// ModuleExtension is the contract PIM owns and every module implements. PIM
+// generates one client for it and points that client at N base URLs read from
+// the registry.
+//
+// Two RPCs, deliberately. There is no ValidateProducts: under pull-only, module
+// data never traverses PIM's write path — UpsertProduct carries ProductCore and
+// nothing else — so a module has nothing of its own to validate, and core
+// fields are not a module's to veto. A fail-open veto lets invalid data land
+// whenever the module is slow; a fail-closed one makes module availability gate
+// PIM writes. If a blocking policy check is wanted later, it is a separate
+// extension point with explicit advisory-vs-blocking semantics, not a third RPC.
+service ModuleExtension {
+  rpc Describe(DescribeRequest) returns (DescribeResponse);
+  rpc EnrichProducts(EnrichProductsRequest) returns (EnrichProductsResponse);
+}
+
+message DescribeRequest {}
+
+message DescribeResponse {
+  // Stable, lowercase, used as the extension key.
+  string module_id = 1;
+  string version = 2;
+  repeated ExtensionPoint points = 3;
+}
+
+message ExtensionPoint {
+  // "product.enrich", "product.enrich.contextual".
+  string name = 1;
+  // "acme.tax/v1". Unique within a module; a fragment names the point it
+  // belongs to by this value.
+  string schema_ref = 2;
+  // JSON Schema for fragments at this point. Must describe an object: a
+  // module's fragments are merged into one object under extensions[module_id].
+  string json_schema = 3;
+  // 0 = never cache. The module's own advice; reserved for fragments carrying
+  // per-request identity.
+  int32 cache_ttl_seconds = 4;
+  // The EnrichProductsRequest.context keys this point's output depends on.
+  // PIM hashes only these into the cache key, so an undeclared key (say,
+  // channel) does not fragment the cache.
+  repeated string context_keys = 5;
+}
+
+message EnrichProductsRequest {
+  string tenant_id = 1;
+  // ALWAYS batched: one call per module per read, never one per product.
+  repeated pim.v1.ProductCore products = 2;
+  // locale, channel, jurisdiction, buyer_state
+  map<string, string> context = 3;
+}
+
+// Fragment carries module data as google.protobuf.Struct, NOT Any. This is
+// load-bearing.
+//
+// protojson resolves an Any's type_url against protoregistry.GlobalTypes, which
+// only contains types compiled into the binary. PIM does not compile module
+// types, so marshalling an Any would fail — at serialization time, after the
+// handler succeeded, and only for tenants that installed that module. Struct is
+// a well-known type present in every binary. It marshals with the default
+// resolver, always.
+//
+// Modules keep strong typing on their side of the boundary by defining their
+// own proto messages and converting them to Struct via a protojson round-trip.
+message Fragment {
+  // Must equal the module_id the module is registered under; PIM rejects the
+  // fragment at merge otherwise.
+  string module_id = 1;
+  // Must name one of the module's registered extension points.
+  string schema_ref = 2;
+  google.protobuf.Struct data = 3;
+}
+
+message FragmentSet {
+  repeated Fragment fragments = 1;
+}
+
+message EnrichProductsResponse {
+  map<string, FragmentSet> by_product_id = 1;
+}

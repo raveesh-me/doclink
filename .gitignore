@@ -1,23 +1,7 @@
-bin/
-node_modules/
-dist/
+/bin/
+/gen/
+/data/
+*.db
+*.db-shm
+*.db-wal
 *.log
-.env
-.logs/
-.images/
-
-# Benchmark output is scratch by default — it is machine- and run-specific.
-# The two files docs/architecture.md quotes its tables from are committed
-# anyway, so the numbers in the doc can be checked against their source.
-bench/results/*.json
-!bench/results/latest.json
-!bench/results/refs-only.json
-
-# `go build ./services/pim/` without -o drops the binary in the cwd. Real builds
-# go to bin/ via the Makefile; these are strays.
-/doclink
-/pim
-/subscriptions
-/shipping
-/migrate
-/seed

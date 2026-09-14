@@ -1,16 +1,17 @@
 version: v2
+# buf v2 replaces buf.work.yaml with the `modules` list below; a separate
+# workspace file is deprecated and buf warns if one is present.
 modules:
   - path: proto
 lint:
   use:
     - STANDARD
   except:
-    - PACKAGE_VERSION_SUFFIX
-    # DocumentResolver and LinkResolver are named for what a service must
-    # implement, not for what it is. "LinkResolverService" would read as a
-    # deployable component; these are contracts that several unrelated services
-    # each satisfy, and the shorter name is what the docs and comments use.
+    # PIM, Registry and ModuleExtension are named as the spec names them.
     - SERVICE_SUFFIX
+    # FAIL_OPEN / ACTIVE read better on the JSON wire than
+    # FAILURE_MODE_FAIL_OPEN. Values stay unique within each package.
+    - ENUM_VALUE_PREFIX
 breaking:
   use:
     - FILE
