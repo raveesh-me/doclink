@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package modules.taxes.v1;
+
+// The taxes module's own types. They never cross the wire as themselves: the
+// module converts them to google.protobuf.Struct at its boundary. PIM does not
+// import this package, and no_module_imports_test.go keeps it that way.
+
+// Fragment data for the product.enrich point (schema_ref acme.tax/v1).
+message TaxClassification {
+  string hsn = 1;
+  string tax_class = 2;
+}
+
+enum Supply {
+  SUPPLY_UNSPECIFIED = 0;
+  INTRA_STATE = 1;
+  INTER_STATE = 2;
+}
+
+// Fragment data for product.enrich.contextual (acme.tax.contextual/v1).
+message TaxComputation {
+  string buyer_state = 1;
+  Supply supply = 2;
+  double rate = 3;
+  int64 amount_minor = 4;
+  // Intra-state supply splits into CGST + SGST; inter-state is IGST.
+  int64 cgst_minor = 5;
+  int64 sgst_minor = 6;
+  int64 igst_minor = 7;
+}

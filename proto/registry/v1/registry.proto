@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+package registry.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// Registry is the per-tenant module registry. It is served by the PIM process.
+service Registry {
+  // A handshake, not an insert: dials base_url, calls Describe, and rejects the
+  // whole registration if any schema fails to compile or the module_id is
+  // reserved or already installed for the tenant.
+  rpc RegisterModule(RegisterModuleRequest) returns (RegisterModuleResponse);
+  // Moves the module to DRAINING, which stops new fan-out, and deletes it after
+  // a grace period so in-flight reads complete.
+  rpc UnregisterModule(UnregisterModuleRequest) returns (UnregisterModuleResponse);
+  rpc ListModules(ListModulesRequest) returns (ListModulesResponse);
+  // Called by a module when its own data changes. Carries product IDs and no
+  // payload: the module is the source of truth and PIM re-pulls on next read.
+  rpc InvalidateFragments(InvalidateFragmentsRequest) returns (InvalidateFragmentsResponse);
+  // Changes the tenant-owned policy for an installed module. No handshake:
+  // policy is chosen by the tenant, not described by the module, so it must be
+  // changeable while the module is down.
+  rpc UpdateModulePolicy(UpdateModulePolicyRequest) returns (UpdateModulePolicyResponse);
+}
+
+enum FailureMode {
+  FAILURE_MODE_UNSPECIFIED = 0;
+  // Omit the extension (or serve stale) and mark the product degraded.
+  FAIL_OPEN = 1;
+  // Fail the whole read with Unavailable, naming the module.
+  FAIL_CLOSED = 2;
+}
+
+enum ModuleState {
+  MODULE_STATE_UNSPECIFIED = 0;
+  ACTIVE = 1;
+  DRAINING = 2;
+  DEAD = 3;
+}
+
+// One row per (tenant, module, extension point).
+message ModuleRegistration {
+  string tenant_id = 1;
+  string module_id = 2;
+  string version = 3;
+  string base_url = 4;
+  string extension_point = 5;
+  int32 cache_ttl_seconds = 6;
+  repeated string context_keys = 7;
+  string schema_ref = 8;
+  string json_schema = 9;
+  int32 timeout_ms = 10;
+  FailureMode failure_mode = 11;
+  ModuleState state = 12;
+  google.protobuf.Timestamp registered_at = 13;
+  google.protobuf.Timestamp last_verified_at = 14;
+}
+
+message RegisterModuleRequest {
+  string tenant_id = 1;
+  string base_url = 2;
+  // Defaults to 500 when zero.
+  int32 timeout_ms = 3;
+  // Defaults to FAIL_OPEN when unspecified.
+  FailureMode failure_mode = 4;
+}
+
+message RegisterModuleResponse {
+  repeated ModuleRegistration registrations = 1;
+}
+
+message UnregisterModuleRequest {
+  string tenant_id = 1;
+  string module_id = 2;
+}
+
+message UnregisterModuleResponse {
+  google.protobuf.Timestamp delete_after = 1;
+}
+
+message ListModulesRequest {
+  string tenant_id = 1;
+}
+
+message ListModulesResponse {
+  repeated ModuleRegistration registrations = 1;
+}
+
+message InvalidateFragmentsRequest {
+  string tenant_id = 1;
+  string module_id = 2;
+  // Empty invalidates every cached fragment of the module for the tenant.
+  repeated string product_ids = 3;
+}
+
+message InvalidateFragmentsResponse {
+  int32 evicted = 1;
+}
+
+message UpdateModulePolicyRequest {
+  string tenant_id = 1;
+  string module_id = 2;
+  // Zero leaves the timeout unchanged.
+  int32 timeout_ms = 3;
+  // Unspecified leaves the failure mode unchanged.
+  FailureMode failure_mode = 4;
+}
+
+message UpdateModulePolicyResponse {
+  repeated ModuleRegistration registrations = 1;
+}

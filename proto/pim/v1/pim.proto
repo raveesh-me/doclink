@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package pim.v1;
+
+import "google/protobuf/struct.proto";
+
+// The public PIM API.
+//
+// Nothing in this file names a module. Module data reaches consumers through
+// Product.extensions, whose shape PIM does not know at compile time; the
+// per-tenant OpenAPI document (GET /openapi/{tenant_id}.json) is where that
+// shape is described.
+service PIM {
+  rpc GetProduct(GetProductRequest) returns (GetProductResponse);
+  rpc ListProducts(ListProductsRequest) returns (ListProductsResponse);
+  // Writes ProductCore only. Module data never traverses the write path, so an
+  // upsert never waits on, or fails because of, a module.
+  rpc UpsertProduct(UpsertProductRequest) returns (UpsertProductResponse);
+}
+
+// ProductCore is everything PIM owns. Keep it minimal: anything that must
+// appear in a WHERE or ORDER BY clause has to live here, because module data is
+// never stored as a record and so cannot be queried.
+message ProductCore {
+  string id = 1;
+  string tenant_id = 2;
+  string sku = 3;
+  string title = 4;
+  int64 price_minor = 5;
+  string currency = 6;
+}
+
+message Product {
+  ProductCore core = 1;
+  // Key is the module_id of the module that produced the value, as recorded in
+  // the registry — never as claimed by the module.
+  map<string, google.protobuf.Struct> extensions = 2;
+  // module_ids whose extension is missing, or served stale, for this product.
+  repeated string degraded = 3;
+}
+
+message GetProductRequest {
+  string tenant_id = 1;
+  string id = 2;
+  // Passed to modules: locale, channel, jurisdiction, buyer_state.
+  map<string, string> context = 3;
+}
+
+message GetProductResponse {
+  Product product = 1;
+}
+
+message ListProductsRequest {
+  string tenant_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  map<string, string> context = 4;
+}
+
+message ListProductsResponse {
+  repeated Product products = 1;
+  string next_page_token = 2;
+}
+
+message UpsertProductRequest {
+  ProductCore product = 1;
+}
+
+message UpsertProductResponse {
+  ProductCore product = 1;
+}

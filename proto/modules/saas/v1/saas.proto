@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package modules.saas.v1;
+
+// The saas module's own types; see modules/taxes/v1/taxes.proto.
+
+enum BillingCycle {
+  BILLING_CYCLE_UNSPECIFIED = 0;
+  MONTHLY = 1;
+  ANNUAL = 2;
+}
+
+// Fragment data for the product.enrich point (schema_ref acme.saas/v1).
+message SubscriptionTerms {
+  int32 seats = 1;
+  BillingCycle billing_cycle = 2;
+}

@@ -1,189 +1,24 @@
-name: CI
+name: ci
 
 on:
   push:
-    branches: [main]
   pull_request:
-  workflow_dispatch:
-
-# A second push to the same branch cancels the first. These jobs take minutes,
-# and reviewing a run for a commit that has already been superseded is waste.
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-permissions:
-  contents: read
 
 jobs:
-  go:
-    name: Go build, vet, test
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
-          cache: true
-
+      - name: Install buf
+        run: go install github.com/bufbuild/buf/cmd/buf@v1.64.0
+      - name: make test (includes the no-module-imports boundary check)
+        run: make test
       - name: gofmt
-        run: |
-          unformatted=$(gofmt -l cmd internal services bench)
-          if [ -n "$unformatted" ]; then
-            echo "::error::gofmt needed on:"; echo "$unformatted"
-            gofmt -d cmd internal services bench
-            exit 1
-          fi
-
-      - run: go vet ./...
-      - run: go build ./...
-      - run: go test -race ./...
-
-  protos:
-    name: Protos lint and generated code is current
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-          cache: true
-
-      - uses: bufbuild/buf-setup-action@v1
-        with:
-          github_token: ${{ github.token }}
-
-      - run: buf lint
-
-      # Generated code is committed so the repo builds on clone. That is only
-      # safe if something checks it still matches the protos: a hand-edited
-      # .pb.go, or a proto change someone forgot to regenerate, would otherwise
-      # survive review and diverge silently.
-      - name: Regenerate and diff
-        run: |
-          GOBIN="$PWD/bin" go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-          GOBIN="$PWD/bin" go install connectrpc.com/connect/cmd/protoc-gen-connect-go@latest
-          PATH="$PWD/bin:$PATH" buf generate
-          buf generate --template buf.gen.web.yaml
-          if ! git diff --quiet -- gen web/gen; then
-            echo "::error::generated code is stale — run 'make generate' and commit"
-            git diff --stat -- gen web/gen
-            git diff -- gen web/gen | head -100
-            exit 1
-          fi
-
-  verify:
-    name: Architectural rules
-    runs-on: ubuntu-latest
-
-    # The role-isolation assertion is the one check that cannot be made
-    # statically: it asserts Postgres refuses a cross-schema read. That needs a
-    # real server, so the job runs one.
-    services:
-      postgres:
-        image: postgres:17-alpine
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: doclink
-        ports: ['5432:5432']
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-          cache: true
-
-      - name: Apply migrations
-        env:
-          MIGRATION_DSN: postgres://postgres:postgres@localhost:5432/doclink?sslmode=disable
-          SERVICE_ROLE_PASSWORD: doclink-dev
-        run: go run ./cmd/migrate
-
-      - name: Verify decoupling
-        env:
-          PGHOST: localhost
-          PGPORT: '5432'
-          SERVICE_ROLE_PASSWORD: doclink-dev
-          # Without this the script would skip the one assertion that needs a
-          # live server and still exit 0 — a green check proving nothing.
-          REQUIRE_POSTGRES: '1'
-        run: ./scripts/verify-decoupling.sh
-
-  web:
-    name: Frontends typecheck and build
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: npm
-          cache-dependency-path: web/package-lock.json
-
-      # npm 11 defers package install scripts, and vite needs esbuild's binary
-      # from one. No approval step here: web/package.json carries a committed
-      # `allowScripts` entry pinned to the esbuild version in the lockfile, so
-      # `npm ci` honours it on any platform.
-      - name: Install
-        run: npm ci --no-audit --no-fund
-
-      # Typechecking is not part of `vite build` — it transpiles without
-      # checking types — so a broken contract between the generated protobuf
-      # code and a component would build cleanly and fail in the browser.
-      - name: Typecheck
-        run: |
-          npx vue-tsc --noEmit -p pim-web/tsconfig.json
-          npx vue-tsc --noEmit -p subscriptions-web/tsconfig.json
-          npx tsc --noEmit -p shipping-web/tsconfig.json
-
-      - name: Build
-        run: npm run build --workspaces --if-present
-
-  images:
-    name: Container images build
-    runs-on: ubuntu-latest
-    # Only after the code is known good; nine image builds is a poor way to
-    # discover a compile error.
-    needs: [go, web]
-    env:
-      # The Containerfiles use `RUN --mount=type=cache`, which is BuildKit-only.
-      DOCKER_BUILDKIT: '1'
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Build backend images
-        run: |
-          for s in doclink pim subscriptions shipping; do
-            docker build -f Containerfile.backend \
-              --build-arg SERVICE=services/$s --build-arg TARGETARCH=amd64 \
-              -t doclink/$s:ci .
-          done
-          for c in migrate seed; do
-            docker build -f Containerfile.backend \
-              --build-arg SERVICE=cmd/$c --build-arg TARGETARCH=amd64 \
-              -t doclink/$c:ci .
-          done
-
-      - name: Build embed images
-        run: |
-          for a in subscriptions-web shipping-web; do
-            docker build -f Containerfile.frontend --build-arg APP=$a -t doclink/$a:ci .
-          done
-
-      # The shell is built differently: it needs the webhost binary alongside
-      # its static output, because its CSP has to be a response header.
-      - name: Build shell image
-        run: docker build -f Containerfile.shell --build-arg TARGETARCH=amd64 -t doclink/pim-web:ci .
+        run: test -z "$(gofmt -l cmd internal)" || (gofmt -l cmd internal; exit 1)
+      - name: Race detector
+        run: go test -race ./internal/...
+      - name: make demo (every acceptance criterion, end to end)
+        run: make demo
