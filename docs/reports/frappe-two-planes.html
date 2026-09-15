@@ -1,0 +1,561 @@
+<title>Two Planes of the Item Screen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  --paper:#F5F5F2;
+  --raised:#FBFBF8;
+  --ink:#191B1A;
+  --muted:#6C716E;
+  --rule:#DEDFDA;
+  --rule-soft:#E8E9E4;
+  --field:#9E4A2C;
+  --link:#1C6A68;
+  --code-bg:#ECEDE7;
+  --code-ink:#33362F;
+  --shadow:0 1px 0 rgba(25,27,26,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#131513;
+    --raised:#191C19;
+    --ink:#E6E7E2;
+    --muted:#979C97;
+    --rule:#2B2E2B;
+    --rule-soft:#232623;
+    --field:#DC8D66;
+    --link:#61B5AF;
+    --code-bg:#1B1E1B;
+    --code-ink:#CFD2CB;
+    --shadow:0 1px 0 rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131513;
+  --raised:#191C19;
+  --ink:#E6E7E2;
+  --muted:#979C97;
+  --rule:#2B2E2B;
+  --rule-soft:#232623;
+  --field:#DC8D66;
+  --link:#61B5AF;
+  --code-bg:#1B1E1B;
+  --code-ink:#CFD2CB;
+  --shadow:0 1px 0 rgba(0,0,0,.4);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;
+  font-size:18px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.page{max-width:1180px;margin:0 auto;padding:0 24px 120px}
+
+/* ---------- masthead ---------- */
+.masthead{
+  border-bottom:1px solid var(--rule);
+  padding:56px 0 28px;
+  margin-bottom:56px;
+}
+.eyebrow{
+  font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin:0 0 18px;
+}
+h1{
+  font-family:"Archivo",system-ui,-apple-system,sans-serif;
+  font-weight:800;
+  font-size:clamp(34px,5.2vw,58px);
+  line-height:1.02;
+  letter-spacing:-.025em;
+  margin:0 0 20px;
+  max-width:16ch;
+  text-wrap:balance;
+}
+.standfirst{
+  font-size:20px;
+  line-height:1.5;
+  max-width:62ch;
+  color:var(--ink);
+  margin:0 0 28px;
+}
+.standfirst em{font-style:italic}
+.meta{
+  display:flex;flex-wrap:wrap;gap:10px 28px;
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:11.5px;letter-spacing:.04em;color:var(--muted);
+}
+.meta span{display:block}
+
+/* ---------- verdict block ---------- */
+.verdict{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1px;
+  background:var(--rule);
+  border:1px solid var(--rule);
+  margin:0 0 64px;
+}
+.verdict > div{background:var(--raised);padding:26px 28px}
+.verdict h2{
+  font-family:"Archivo",system-ui,sans-serif;
+  font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  margin:0 0 4px;
+}
+.verdict .plane-a h2{color:var(--field)}
+.verdict .plane-b h2{color:var(--link)}
+.verdict p{margin:0;font-size:16.5px;line-height:1.55}
+.verdict code{font-size:13px}
+.verdict .where{
+  display:block;margin-top:14px;
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:11px;color:var(--muted);letter-spacing:.02em;line-height:1.7;
+}
+
+/* ---------- sections ---------- */
+section{
+  position:relative;
+  padding-left:26px;
+  margin-bottom:72px;
+}
+section::before{
+  content:"";position:absolute;left:0;top:7px;bottom:0;width:3px;
+  background:var(--rule);
+}
+section.field::before{background:var(--field)}
+section.link::before{background:var(--link)}
+
+.snum{
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 8px;
+}
+section.field .snum b{color:var(--field);font-weight:400}
+section.link .snum b{color:var(--link);font-weight:400}
+
+h2.head{
+  font-family:"Archivo",system-ui,sans-serif;
+  font-weight:700;font-size:clamp(25px,3vw,33px);line-height:1.12;
+  letter-spacing:-.018em;margin:0 0 20px;max-width:24ch;text-wrap:balance;
+}
+h3{
+  font-family:"Archivo",system-ui,sans-serif;
+  font-weight:600;font-size:17px;letter-spacing:-.005em;
+  margin:38px 0 12px;
+}
+p{max-width:66ch;margin:0 0 18px}
+ul,ol{max-width:64ch;padding-left:20px;margin:0 0 20px}
+li{margin-bottom:9px}
+strong{font-weight:500;color:var(--ink);background:linear-gradient(transparent 62%,var(--rule-soft) 62%)}
+a{color:inherit;text-decoration-color:var(--muted);text-underline-offset:2px}
+a:focus-visible,:focus-visible{outline:2px solid var(--link);outline-offset:3px}
+
+code{
+  font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.82em;
+  background:var(--code-bg);
+  color:var(--code-ink);
+  padding:.1em .34em;border-radius:2px;
+}
+
+/* ---------- breakout blocks ---------- */
+.wide{max-width:none;margin:26px 0 30px;overflow-x:auto}
+pre{
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:12.5px;line-height:1.7;
+  background:var(--code-bg);color:var(--code-ink);
+  padding:20px 22px;margin:0;
+  border-left:2px solid var(--rule);
+  overflow-x:auto;
+  white-space:pre;
+  tab-size:4;
+}
+pre code{background:none;padding:0;font-size:inherit;color:inherit}
+.cap{
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:10.5px;letter-spacing:.06em;color:var(--muted);
+  margin:8px 0 0;max-width:none;
+}
+
+table{
+  border-collapse:collapse;width:100%;
+  font-family:"Archivo",system-ui,sans-serif;
+  font-size:13.5px;line-height:1.45;
+  font-variant-numeric:tabular-nums;
+}
+th{
+  text-align:left;font-weight:600;font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);
+  padding:0 18px 9px 0;border-bottom:1px solid var(--rule);
+  white-space:nowrap;
+}
+td{padding:11px 18px 11px 0;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+td code{font-size:12px}
+tr:last-child td{border-bottom:none}
+.tag{
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  padding:2px 6px;border:1px solid currentColor;border-radius:2px;white-space:nowrap;
+}
+.tag.a{color:var(--field)}
+.tag.b{color:var(--link)}
+.tag.n{color:var(--muted)}
+.gap{color:var(--field);font-weight:600}
+
+blockquote{
+  margin:26px 0;padding:0 0 0 20px;
+  border-left:2px solid var(--rule);
+  max-width:60ch;color:var(--muted);font-style:italic;
+}
+
+.callout{
+  background:var(--raised);
+  border:1px solid var(--rule);
+  padding:22px 24px;margin:28px 0;
+  max-width:none;
+}
+.callout p:last-child{margin-bottom:0}
+.callout .lbl{
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--field);margin:0 0 10px;
+}
+
+/* ---------- closing ---------- */
+.close{
+  border-top:1px solid var(--rule);
+  margin-top:20px;padding-top:44px;
+}
+.close p{font-size:20px;line-height:1.5;max-width:60ch}
+
+@media (max-width:760px){
+  body{font-size:17px}
+  .verdict{grid-template-columns:1fr}
+  section{padding-left:18px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="page">
+
+<header class="masthead">
+  <p class="eyebrow">Framework study · frappe/frappe + frappe/erpnext</p>
+  <h1>Two Planes of the Item Screen</h1>
+  <p class="standfirst">ERPNext shows <em>Sales, Tax, Quality, Manufacturing</em> as tabs on an Item, and <em>Quotation, Sales Order, BOM, Batch</em> as connections below it. They look like peers. They share no code, no storage model, and no extension mechanism.</p>
+  <div class="meta">
+    <span>Sources read at commit depth 1, 2026‑09‑15</span>
+    <span>Anchor case: Stock / Item / Rejection Rice‑50Kg</span>
+    <span>Written against this repo's registry design</span>
+  </div>
+</header>
+
+<div class="verdict">
+  <div class="plane-a">
+    <h2>Field plane — the tabs</h2>
+    <p>Columns and child tables on <code>tabItem</code>. Composed at build time from one doctype JSON, and at install time by <code>Custom Field</code> rows that issue real <code>ALTER TABLE</code>. No runtime tier exists.</p>
+    <span class="where">erpnext/stock/doctype/item/item.json<br>frappe/model/meta.py:165 · :408 · :428</span>
+  </div>
+  <div class="plane-b">
+    <h2>Link plane — the connections</h2>
+    <p>Stores no edges at all. The edge is a column on the satellite; the panel is curation over a graph the framework can already derive by querying its own schema.</p>
+    <span class="where">erpnext/stock/doctype/item/item_dashboard.py<br>frappe/model/meta.py:768 · frappe/desk/notifications.py:242</span>
+  </div>
+</div>
+
+<section class="field">
+  <p class="snum"><b>Plane one</b> — schema composition</p>
+  <h2 class="head">The tabs are not modules. They are one file.</h2>
+
+  <p>There is no "Sales module contributing to Item" in ERPNext. <code>Sales</code>, <code>Tax</code>, <code>Quality</code> and <code>Manufacturing</code> are <code>Tab Break</code> fields inside a single 135-field doctype definition owned by one module, and the fields beneath them are plain columns and child tables on the same row.</p>
+
+  <div class="wide">
+  <table>
+    <thead><tr><th>Tab</th><th>Fields under it</th></tr></thead>
+    <tbody>
+      <tr><td>Sales</td><td><code>sales_uom</code> (Link UOM), <code>grant_commission</code>, <code>max_discount</code>, <code>customer_items</code> (Table <code>Item Customer Detail</code>)</td></tr>
+      <tr><td>Tax</td><td><code>taxes</code> (Table <code>Item Tax</code>), <code>purchase_tax_withholding_category</code>, <code>sales_tax_withholding_category</code></td></tr>
+      <tr><td>Quality</td><td><code>inspection_required_before_purchase</code>, <code>inspection_required_before_delivery</code>, <code>quality_inspection_template</code></td></tr>
+      <tr><td>Manufacturing</td><td><code>include_item_in_manufacturing</code>, <code>is_sub_contracted_item</code>, <code>default_bom</code>, <code>production_capacity</code>, <code>default_item_manufacturer</code></td></tr>
+    </tbody>
+  </table>
+  <p class="cap">erpnext/stock/doctype/item/item.json — field_order walked between Tab Breaks</p>
+  </div>
+
+  <p>The giveaway is module ownership. A Frappe child table is physically a <code>parent</code>/<code>parenttype</code> row set and must be declared as a <code>Table</code> field on its parent — so it cannot live in the module that owns its meaning:</p>
+
+  <div class="wide">
+<pre><code>Item                  module=Stock  istable=0
+Item Tax              module=Stock  istable=1   &lt;- tax semantics
+Item Default          module=Stock  istable=1   &lt;- accounting semantics
+Item Customer Detail  module=Stock  istable=1   &lt;- selling semantics</code></pre>
+  <p class="cap">Three teams' schemas, one team's file</p>
+  </div>
+
+  <p>This is the "columns on the anchor" failure mode from <code>docs/architecture.md</code>, shipped at scale and mostly working. It works because ERPNext is one repository, one release train, one maintainer group. It is not a decoupling mechanism and never claimed to be.</p>
+
+  <h3>The escape hatch, and its price</h3>
+
+  <p>An app that is <em>not</em> erpnext enriches Item through <code>Custom Field</code> and <code>Property Setter</code>, shipped as fixtures and synced on install. That path is real DDL:</p>
+
+  <div class="wide">
+<pre><code>def on_update(self):                      # custom_field.py:218
+    ...
+    frappe.clear_cache(doctype=self.dt)
+    frappe.db.updatedb(self.dt)           # ALTER TABLE tabItem ADD COLUMN</code></pre>
+  </div>
+
+  <p>The assembly order in <code>Meta.process()</code> is what makes the result coherent — custom fields merged, property setters applied over them, field order resolved via <code>insert_after</code>, then custom links and actions:</p>
+
+  <div class="wide">
+<pre><code>def process(self):                        # frappe/model/meta.py:165
+    self.add_custom_fields()              # :408  merge tabCustom Field rows
+    self.apply_property_setters()         # :428  override label/hidden/reqd/options
+    self.init_field_caches()
+    self.sort_fields()
+    self.get_valid_columns()
+    self.set_custom_permissions()
+    self.add_custom_links_and_actions()   # :477  ← the other plane leaks in here
+    self.check_if_large_table()</code></pre>
+  </div>
+
+  <p>Uninstall is a display filter, not a migration: <code>is_field_hidden_by_app()</code> hides a field owned by a disabled app, and also any <code>Link</code> or <code>Table</code> field <em>pointing at</em> a doctype that app owns. The column stays in the table.</p>
+
+  <p><strong>So the field plane has two tiers, compile-time and install-time, and no runtime tier.</strong> Nothing here discovers a field at page load.</p>
+</section>
+
+<section class="link">
+  <p class="snum"><b>Plane two</b> — curated reverse links</p>
+  <h2 class="head">The connections panel stores no edges.</h2>
+
+  <p>The entire second screenshot is one dictionary in one file:</p>
+
+  <div class="wide">
+<pre><code>def get_data():                                  # item_dashboard.py
+    return {
+        "heatmap": True,
+        "fieldname": "item_code",                # default reverse-link column
+        "non_standard_fieldnames": {             # per-doctype patch list
+            "Work Order":     "production_item",
+            "Product Bundle": "new_item_code",
+            "BOM":            "item",
+            "Batch":          "item",
+        },
+        "transactions": [
+            {"label": _("Groups"),  "items": ["BOM", "Product Bundle", "Item Alternative"]},
+            {"label": _("Pricing"), "items": ["Item Price", "Pricing Rule"]},
+            {"label": _("Sell"),    "items": ["Quotation", "Sales Order",
+                                              "Delivery Note", "Sales Invoice"]},
+            ...
+        ],
+    }</code></pre>
+  </div>
+
+  <p>Read what this is and is not. The edge is <code>tabSales Order Item.item_code</code> — <strong>a column on the satellite</strong>. The anchor holds nothing, which is the same inversion this repo argues for. <code>fieldname</code> is a convention ("assume everyone refers to me through <code>item_code</code>"); <code>non_standard_fieldnames</code> patches the exceptions. And <code>transactions</code> is grouping and ordering only — it is not the set of things that link to Item. That set is computed elsewhere, automatically, and is much larger.</p>
+
+  <h3>Three ways in, chained in app order</h3>
+
+  <div class="wide">
+<pre><code>def get_dashboard_data(self):                    # frappe/model/meta.py:768
+    data = frappe._dict()
+    if not self.custom:
+        module = load_doctype_module(self.name, suffix="_dashboard")
+        if hasattr(module, "get_data"):
+            data = frappe._dict(module.get_data())    # 1. file convention
+
+    self.add_doctype_links(data)                      # 2. DocType Link rows, custom=1
+
+    if not self.custom:
+        for hook in frappe.get_hooks("override_doctype_dashboards", {}).get(self.name, []):
+            data = frappe._dict(frappe.get_attr(hook)(data=data))   # 3. hook chain
+    return data</code></pre>
+  </div>
+
+  <ol>
+    <li><strong>File convention.</strong> <code>&lt;doctype&gt;_dashboard.py</code> in the owning app. Only the owner writes this.</li>
+    <li><strong><code>DocType Link</code> child rows.</strong> <code>link_doctype</code>, <code>link_fieldname</code>, <code>group</code>, <code>parent_doctype</code>, <code>table_fieldname</code>, <code>is_child_table</code>, <code>hidden</code>, <code>custom</code>. Rows flagged <code>custom=1</code> are pulled from the database at meta-build time, so any installed app — or a site admin through Customize Form — adds a connection group <em>without editing the anchor's source</em>. This is the closest thing Frappe has to a <code>Contribution</code>.</li>
+    <li><strong><code>override_doctype_dashboards</code>.</strong> One function per app, chained, each handed the accumulated <code>data</code>. Full mutation rights, including deletion.</li>
+  </ol>
+
+  <h3>Resolution, and where it gets defensive</h3>
+
+  <div class="wide">
+<pre><code>@frappe.whitelist()
+def get_open_count(doctype, name, items=None):   # frappe/desk/notifications.py:242
+    if frappe.flags.in_migrate or frappe.flags.in_install:
+        return {"count": []}
+    frappe.db.set_execution_timeout(1)           # 1s per count query, hard
+    try:
+        return _get_linked_document_counts(doctype, name, items)
+    except Exception as e:
+        if frappe.db.is_statement_timeout(e):
+            return {"count": []}                 # fail open — badges just vanish
+        raise</code></pre>
+  </div>
+
+  <p>Each doctype in the groups resolves as one of two shapes:</p>
+
+  <ul>
+    <li><strong>External</strong> (<code>:359</code>) — the satellite carries the column. <code>count(*) WHERE item_code = ?</code>, plus a second count under the doctype's "open" filters for the orange badge. When the fieldname sits on several child tables of one parent, <code>:380</code> switches to an <code>or_filters</code> name list capped at 100, because a filter on an ambiguous fieldname silently resolves to whichever child table joins first.</li>
+    <li><strong>Internal</strong> (<code>:313</code>) — the <em>anchor</em> holds the value, directly or inside one of its own child tables. No query at all: read the already-loaded document and count distinct values.</li>
+    <li>And because pairs get created in either direction — a Sales Invoice made <em>from</em> a Delivery Note versus one a Delivery Note was made from — <code>:290</code> probes the external direction when the internal one comes back empty.</li>
+  </ul>
+
+  <p>On the client, <code>filter_permissions()</code> drops unreadable doctypes cosmetically (the server already enforced via <code>get_lazy_doc(..., check_permission=True)</code>), <code>render_links()</code> paints the template once, and the <code>+</code> button calls <code>frm.make_new(doctype, fieldname)</code>, which prefers an app-supplied <code>make_methods</code> entry and otherwise scans the target's meta for a <code>Link</code> field whose <code>options</code> is the current doctype, then pre-fills it.</p>
+
+  <p>All of it mounts into a section literally labelled <em>Connections</em>, which ERPNext parks under a <code>dashboard_tab</code> Tab Break. <strong>That is the only thing the two planes share: a tab strip.</strong></p>
+</section>
+
+<section class="link">
+  <p class="snum"><b>Plane two, continued</b> — the truth underneath</p>
+  <h2 class="head">The real link graph is a SELECT.</h2>
+
+  <div class="wide">
+<pre><code>filters = [["fieldtype", "=", "Link"], ["options", "=", doctype]]
+links  = frappe.get_all("DocField",     fields=["parent", "fieldname"],       filters=filters)
+links += frappe.get_all("Custom Field", fields=["dt as parent", "fieldname"], filters=filters)</code></pre>
+  <p class="cap">frappe/desk/form/linked_with.py:978 — get_linked_fields</p>
+  </div>
+
+  <p>This is the load-bearing fact about the whole framework. <strong>The schema is stored as documents</strong> — <code>tabDocType</code>, <code>tabDocField</code>, <code>tabCustom Field</code>, <code>tabDocType Link</code> are ordinary tables in the same database as the data. So "who links to Item?" is a query, not a registry anyone maintains, and the answer includes edges a third-party app added five minutes ago.</p>
+
+  <p>That derived graph drives deletion and cancellation cascades, the <em>Links</em> button, and link integrity on delete. A module opts out with <code>exclude_from_linked_with = True</code>.</p>
+
+  <blockquote>The relationship between the dashboard and the derived graph: the derived graph is the truth, the dashboard is the curation. The panel exists because the full graph is too large and unordered to put on a screen — not because it is missing anything.</blockquote>
+
+  <h3>And a fourth mechanism: polymorphic satellites</h3>
+
+  <div class="wide">
+<pre><code>Dynamic Link (istable=1)
+  link_doctype  Link          -> DocType
+  link_name     Dynamic Link  -> link_doctype
+  link_title    Read Only</code></pre>
+  </div>
+
+  <p>Contact and Address hold a child table of these. One Address attaches to a Customer, a Supplier and a Lead at once, with zero columns on any of them and zero foreign keys anywhere — the row-level version of the same inversion.</p>
+
+  <p>The price is in <code>frappe/model/dynamic_links.py</code>. To know which doctypes a dynamic link <em>actually</em> points at, it runs <code>SELECT DISTINCT</code> over the whole satellite table and caches for twelve hours, admitting in its own docstring that results "can possibly be outdated" and a cache miss "can often be VERY expensive on large table". Raw SQL writes never invalidate it.</p>
+
+  <p><strong>Polymorphism without a declaration means the type set must be discovered by scanning data.</strong> That is precisely what <code>link_types</code> in this repo exists to avoid.</p>
+</section>
+
+<section>
+  <p class="snum"><b>Why it holds</b> — three properties we do not have</p>
+  <h2 class="head">Frappe affords all four mechanisms by being single-tenant.</h2>
+
+  <ol>
+    <li><strong>Metadata is data, in the same database.</strong> Reverse-link discovery is a join. A registry lookup is a local query, not a network hop.</li>
+    <li><strong>One database per tenant.</strong> A Frappe "site" <em>is</em> a database. <code>Custom Field</code>, <code>DocType Link</code> and <code>Property Setter</code> rows are per-site. Per-tenant schema divergence is achieved with per-tenant <code>ALTER TABLE</code> — sane only at hundreds of tenants, not hundreds of thousands.</li>
+    <li><strong>Apps are code on the bench, activated per site.</strong> <code>_load_app_hooks()</code> iterates <code>get_active_apps()</code> and imports <code>&lt;app&gt;.hooks</code>; <code>app_state.py</code> derives disabled modules and doctypes from <code>disabled_apps</code>, and every meta build, list query and permission query filters against them.</li>
+  </ol>
+
+  <div class="callout">
+    <p class="lbl">The marketplace answer, stated precisely</p>
+    <p>Frappe's marketplace is <strong>per-tenant activation of code that is already deployed</strong>. Installing an app writes rows and runs DDL on one tenant's database. It never loads code at runtime, and a tenant cannot have an app the bench does not have.</p>
+    <p>That is the same shape as "some modules hardcoded at code time" — Frappe simply makes <em>every</em> module that shape and varies only the activation.</p>
+  </div>
+</section>
+
+<section>
+  <p class="snum"><b>Mapping</b> — frappe → this repo</p>
+  <h2 class="head">What already matches, and the one dimension missing.</h2>
+
+  <div class="wide">
+  <table>
+    <thead><tr><th>Frappe mechanism</th><th>Plane</th><th>Equivalent here</th><th>Delta</th></tr></thead>
+    <tbody>
+      <tr><td>doctype JSON fields, <code>Tab Break</code></td><td><span class="tag a">field</span></td><td>— deliberately absent</td><td>keep absent</td></tr>
+      <tr><td><code>Custom Field</code> + fixtures</td><td><span class="tag a">field</span></td><td>—</td><td>per-tenant DDL; do not port</td></tr>
+      <tr><td><code>&lt;doctype&gt;_dashboard.py</code></td><td><span class="tag b">link</span></td><td><code>ExtensionPoint</code> + <code>Contribution</code></td><td>ours is runtime-discovered, theirs meta-build-time</td></tr>
+      <tr><td><code>DocType Link</code> rows, <code>custom=1</code></td><td><span class="tag b">link</span></td><td><code>Contribution</code></td><td>we have no group / ordering beyond <code>weight</code></td></tr>
+      <tr><td><code>override_doctype_dashboards</code></td><td><span class="tag b">link</span></td><td>—</td><td>no post-processing hook; correct to omit</td></tr>
+      <tr><td><code>get_open_count</code></td><td><span class="tag b">link</span></td><td><code>LinkResolver</code> fan-out</td><td>no count-only call — see below</td></tr>
+      <tr><td><code>_get_linked_doctypes</code> derived graph</td><td><span class="tag b">link</span></td><td><code>link_types</code> declarations</td><td>must be declared: schema is not shared. This is the real trade.</td></tr>
+      <tr><td><code>Dynamic Link</code> child table</td><td><span class="tag b">link</span></td><td>satellite table + <code>anchor_ref</code></td><td>same inversion, typed by declaration not by scan</td></tr>
+      <tr><td>app install / <code>disabled_apps</code></td><td><span class="tag n">activation</span></td><td class="gap">missing</td><td class="gap">the whole gap</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>The important agreement: <code>Contribution</code> and <code>LinkTypeDecl</code> are already two separate declarations in <code>proto/doclink/v1/registry.proto</code>. Frappe's <code>DocType Link</code> row does triple duty — it renders the card, defines the count query, <em>and</em> seeds the new-document prefill — which is why <code>add_doctype_links</code> has to back-fill three different dictionaries out of one row. Keep them split.</p>
+</section>
+
+<section>
+  <p class="snum"><b>Recommendations</b> — six changes</p>
+  <h2 class="head">Model the activation dimension, not the field plane.</h2>
+
+  <h3>1 · Tenancy is a security boundary, and it is absent</h3>
+
+  <p>Nothing in <code>proto/doclink/v1/*</code> or <code>internal/pg/migrations/0005_doclink.sql</code> carries a tenant, and <code>contributions</code> is <code>UNIQUE (extension_point_id, namespace)</code> <em>globally</em>. Model it as two tables so declaration count stays proportional to modules, not tenants × modules:</p>
+
+  <div class="wide">
+<pre><code>-- code-time identity: one row per module that exists in the world
+CREATE TABLE doclink.modules (
+    module_key  TEXT PRIMARY KEY,      -- "subscriptions"
+    source      TEXT NOT NULL,         -- 'builtin' | 'marketplace'
+    publisher   TEXT NOT NULL
+);
+
+-- per-tenant activation: the Frappe "installed app" row
+CREATE TABLE doclink.module_installations (
+    tenant_id   TEXT NOT NULL,
+    module_key  TEXT NOT NULL REFERENCES doclink.modules,
+    state       TEXT NOT NULL,         -- 'active' | 'suspended' | 'uninstalling'
+    PRIMARY KEY (tenant_id, module_key)
+);</code></pre>
+  </div>
+
+  <p><code>contributions</code> and <code>link_types</code> stay tenant-free — they describe code, registered at module boot, exactly as today. The tenant filter is a join on the read path:</p>
+
+  <div class="wide">
+<pre><code>SELECT c.* FROM doclink.contributions c
+JOIN doclink.module_installations i
+  ON i.module_key = c.namespace AND i.tenant_id = $1 AND i.state = 'active'
+WHERE c.extension_point_id = $2
+ORDER BY c.weight DESC, c.title;</code></pre>
+  </div>
+
+  <div class="callout">
+    <p class="lbl">Non-negotiable</p>
+    <p><code>tenant_id</code> comes from the request's auth context inside the registry, <strong>never from a field the caller sets</strong>. A client-supplied tenant on <code>ListContributions</code> is a cross-tenant enumeration of who installed what. Same rule for <code>GetLinks</code>: the fan-out plan derives from the trusted tenant, and a module not installed for that tenant is <em>not called</em> — not called and filtered.</p>
+  </div>
+
+  <h3>2 · <code>builtin</code> vs <code>marketplace</code> is metadata, never dispatch</h3>
+
+  <p>A module compiled into the binary registers through the same <code>RegisterContribution</code> / <code>RegisterLinkType</code> calls at boot that a third-party module makes over the network. The <code>source</code> column exists so you can refuse to uninstall a builtin and so support can answer "where did this card come from" — not so any code path branches on it. The moment the shell contains <code>if (contribution.source === 'builtin')</code>, the property <code>make verify</code> asserts is gone.</p>
+
+  <p>The precedent is exact: <code>erpnext</code> is an app on the bench with the same lifecycle as any marketplace app, and core reads its hooks through the same loop.</p>
+
+  <h3>3 · CSP and lifecycle derive from the installed set</h3>
+
+  <p><code>services/webhost</code> computes <code>frame-src</code> as registry contributions ∩ <code>ALLOWED_EMBED_ORIGINS</code>. With tenancy, the first term becomes <em>this tenant's active installations</em>, and a suspended module drops out of the header on the next page load. Same for the lifecycle fan-out: <code>link_types … WHERE subscribes_to_lifecycle</code> becomes that joined to active installations, or a satellite keeps receiving deletes for a tenant that offboarded it.</p>
+
+  <h3>4 · Do not build the field plane. Build a slot for it.</h3>
+
+  <p>The Sales/Tax/Quality tabs are the pattern this repo exists to refuse. A satellite that needs to appear <em>as a tab</em> gets a second extension point — <code>pim/item:detail.tab</code> — with the identical contract: anchor DocRef in, iframe out, satellite owns storage. Different slot, same plane, no anchor schema change.</p>
+
+  <p>The only fields belonging on <code>pim.items</code> are ones the PIM team would defend in review as intrinsic. If tenants genuinely need tenant-specific <em>anchor-owned</em> attributes, that is a third thing: a tenant-scoped, declared, validated attribute schema owned by PIM (<code>pim.item_attribute_defs</code> plus a typed value table), versioned and migrated by PIM. Not an open JSON bag, and not per-tenant DDL — <code>Custom Field</code> gets away with DDL only because of one database per tenant.</p>
+
+  <h3>5 · Give <code>LinkResolver</code> a count-only call with a deadline</h3>
+
+  <p>Frappe's badge counts are its operational weak point: an unbounded <code>count(*)</code> per connection, defended by a one-second statement timeout and a fail-open empty result. Reasonable under one database; worse over a network fan-out, where the card menu's question — "is there anything here?" — currently costs a full <code>ResolveLinks</code>.</p>
+
+  <p>Add <code>CountLinks(anchor_ref) -&gt; {count, open_count}</code>, hold the per-satellite budget well under the existing 5s client timeout, and render an unknown badge on timeout rather than blocking the menu. The benchmark already argues for it: with <code>refs_only</code>, INDEXED goes flat at 4.3 ms across eighteen satellites. A count is the degenerate case of refs-only and should be served from <code>link_index</code> keyed <code>(tenant_id, anchor_ref)</code>, federated path as the correctness fallback.</p>
+
+  <h3>6 · Borrow the internal/external distinction</h3>
+
+  <p>Some links the anchor genuinely holds — <code>Item.default_bom</code> is a column on the item, and Frappe counts it without a query because the value is already loaded. In our terms: when the anchor's own payload already contains a DocRef into another namespace, the answer needs a <em>resolve</em> for the display summary but not a <em>traversal</em> to find the edge. Worth a flag on <code>LinkTypeDecl</code> so <code>GetLinks</code> can skip a hop it does not need.</p>
+</section>
+
+<div class="close">
+  <p>Frappe has one abstraction for <strong>enriching a document</strong> and a separate one for <strong>relating documents</strong>. This repo already picked the second and refused the first. The work left is not to add the first — it is to add the activation dimension Frappe gets for free by giving every tenant its own database, and to make every registry read path derive its fan-out from that, from trusted context, on the server.</p>
+</div>
+
+</div>

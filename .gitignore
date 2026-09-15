@@ -21,3 +21,7 @@ bench/results/*.json
 /shipping
 /migrate
 /seed
+
+# Upstream repos cloned for the framework studies in docs/. Read-only reference,
+# hundreds of MB, and re-clonable from the URLs the studies name.
+reference/

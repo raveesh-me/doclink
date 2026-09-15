@@ -1,0 +1,528 @@
+<title>One Declaration, Both Planes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  --paper:#F5F5F2;
+  --raised:#FBFBF8;
+  --ink:#191B1A;
+  --muted:#6C716E;
+  --rule:#DEDFDA;
+  --rule-soft:#E8E9E4;
+  --field:#9E4A2C;
+  --link:#1C6A68;
+  --code-bg:#ECEDE7;
+  --code-ink:#33362F;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#131513; --raised:#191C19; --ink:#E6E7E2; --muted:#979C97;
+    --rule:#2B2E2B; --rule-soft:#232623; --field:#DC8D66; --link:#61B5AF;
+    --code-bg:#1B1E1B; --code-ink:#CFD2CB;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131513; --raised:#191C19; --ink:#E6E7E2; --muted:#979C97;
+  --rule:#2B2E2B; --rule-soft:#232623; --field:#DC8D66; --link:#61B5AF;
+  --code-bg:#1B1E1B; --code-ink:#CFD2CB;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;
+  font-size:18px;line-height:1.62;-webkit-font-smoothing:antialiased;
+}
+.page{max-width:1180px;margin:0 auto;padding:0 24px 120px}
+
+.masthead{border-bottom:1px solid var(--rule);padding:56px 0 28px;margin-bottom:52px}
+.eyebrow{
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 18px;
+}
+.eyebrow a{color:inherit}
+h1{
+  font-family:"Archivo",system-ui,sans-serif;font-weight:800;
+  font-size:clamp(34px,5.2vw,58px);line-height:1.02;letter-spacing:-.025em;
+  margin:0 0 20px;max-width:15ch;text-wrap:balance;
+}
+.standfirst{font-size:20px;line-height:1.5;max-width:62ch;margin:0 0 28px}
+.standfirst em{font-style:italic}
+.meta{
+  display:flex;flex-wrap:wrap;gap:10px 28px;
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:11.5px;letter-spacing:.04em;color:var(--muted);
+}
+
+/* the thesis block — rail carries both plane colours at once */
+.thesis{
+  position:relative;padding:26px 28px;margin:0 0 60px;
+  background:var(--raised);border:1px solid var(--rule);
+}
+.thesis::before{
+  content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:3px;
+  background:linear-gradient(180deg,var(--field) 0%,var(--field) 50%,var(--link) 50%,var(--link) 100%);
+}
+.thesis .lbl{
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 12px;
+}
+.thesis p{margin:0 0 14px;max-width:66ch}
+.thesis p:last-child{margin-bottom:0}
+
+section{position:relative;padding-left:26px;margin-bottom:70px}
+section::before{content:"";position:absolute;left:0;top:7px;bottom:0;width:3px;background:var(--rule)}
+section.field::before{background:var(--field)}
+section.link::before{background:var(--link)}
+section.both::before{
+  background:linear-gradient(180deg,var(--field) 0%,var(--field) 50%,var(--link) 50%,var(--link) 100%);
+}
+
+.snum{
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 8px;
+}
+.snum b{font-weight:400}
+section.field .snum b{color:var(--field)}
+section.link .snum b{color:var(--link)}
+section.both .snum b{color:var(--ink)}
+
+h2.head{
+  font-family:"Archivo",system-ui,sans-serif;font-weight:700;
+  font-size:clamp(25px,3vw,33px);line-height:1.12;letter-spacing:-.018em;
+  margin:0 0 20px;max-width:24ch;text-wrap:balance;
+}
+h3{
+  font-family:"Archivo",system-ui,sans-serif;font-weight:600;font-size:17px;
+  letter-spacing:-.005em;margin:38px 0 12px;
+}
+p{max-width:66ch;margin:0 0 18px}
+ul,ol{max-width:64ch;padding-left:20px;margin:0 0 20px}
+li{margin-bottom:9px}
+strong{font-weight:500;background:linear-gradient(transparent 62%,var(--rule-soft) 62%)}
+a{color:inherit;text-decoration-color:var(--muted);text-underline-offset:2px}
+:focus-visible{outline:2px solid var(--link);outline-offset:3px}
+
+code{
+  font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.82em;background:var(--code-bg);color:var(--code-ink);
+  padding:.1em .34em;border-radius:2px;
+}
+.wide{max-width:none;margin:26px 0 30px;overflow-x:auto}
+pre{
+  font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12.5px;line-height:1.7;
+  background:var(--code-bg);color:var(--code-ink);padding:20px 22px;margin:0;
+  border-left:2px solid var(--rule);overflow-x:auto;white-space:pre;tab-size:2;
+}
+pre code{background:none;padding:0;font-size:inherit;color:inherit}
+pre .a{color:var(--field)}
+pre .b{color:var(--link)}
+.cap{
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:10.5px;letter-spacing:.06em;color:var(--muted);margin:8px 0 0;max-width:none;
+}
+
+table{
+  border-collapse:collapse;width:100%;
+  font-family:"Archivo",system-ui,sans-serif;font-size:13px;line-height:1.45;
+  font-variant-numeric:tabular-nums;
+}
+th{
+  text-align:left;font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);padding:0 16px 9px 0;border-bottom:1px solid var(--rule);white-space:nowrap;
+}
+td{padding:10px 16px 10px 0;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+td:first-child{font-weight:600;white-space:nowrap}
+td code{font-size:11.5px}
+tr:last-child td{border-bottom:none}
+.none{color:var(--field);font-weight:600}
+.win{color:var(--link);font-weight:600}
+
+blockquote{
+  margin:26px 0;padding:0 0 0 20px;border-left:2px solid var(--rule);
+  max-width:60ch;color:var(--muted);font-style:italic;
+}
+.callout{background:var(--raised);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;max-width:none}
+.callout p:last-child{margin-bottom:0}
+.callout .lbl{
+  font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10.5px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--field);margin:0 0 10px;
+}
+.callout.good .lbl{color:var(--link)}
+
+.take{
+  display:grid;grid-template-columns:auto 1fr;gap:4px 18px;
+  margin:0 0 4px;align-items:baseline;
+}
+.take .n{
+  font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+  color:var(--link);letter-spacing:.06em;
+}
+.take h3{margin:0}
+.takebody{padding-left:0;margin-left:44px}
+.takebody p{max-width:62ch}
+
+.close{border-top:1px solid var(--rule);margin-top:20px;padding-top:44px}
+.close p{font-size:20px;line-height:1.5;max-width:60ch}
+
+@media (max-width:760px){
+  body{font-size:17px}
+  section{padding-left:18px}
+  .takebody{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="page">
+
+<header class="masthead">
+  <p class="eyebrow">Framework study № 2 · medusajs/medusa · companion to <em>Two Planes of the Item Screen</em></p>
+  <h1>One Declaration, Both Planes</h1>
+  <p class="standfirst">Frappe kept enrichment and linking in two unrelated mechanisms that happen to share a tab strip. Medusa emits both from a single <code>defineLink</code> call — and then adds a third form for edges that already exist, which is the idea worth stealing.</p>
+  <div class="meta">
+    <span>reference/medusa, shallow clone, 2026‑09‑15</span>
+    <span>Reference case: ProductVariant ↔ InventoryItem</span>
+    <span>Read against this repo's registry and benchmark</span>
+  </div>
+</header>
+
+<div class="thesis">
+  <p class="lbl">The finding in one paragraph</p>
+  <p><code>defineLink</code> compiles into a config with two sections: <strong><code>relationships</code></strong>, which creates a pivot table owned by a third module, and <strong><code>extends</code></strong>, which grafts a queryable field onto both endpoints' entities. <code>ProductVariant.inventory</code> becomes resolvable on an entity owned by a module that has never heard of inventory — with no column added to <code>product_variant</code> and no code changed in the product module.</p>
+  <p>That is ERPNext's <em>Manufacturing</em> tab without putting <code>default_bom</code> on <code>tabItem</code>. Same user-visible affordance, opposite storage decision.</p>
+</div>
+
+<section class="both">
+  <p class="snum"><b>One</b> — the fused declaration</p>
+  <h2 class="head">Edge and enrichment, emitted together.</h2>
+
+  <div class="wide">
+<pre><code>// src/links/product-inventory.ts — in an app or a plugin
+export default defineLink(
+  ProductModule.linkable.productVariant,
+  InventoryModule.linkable.inventoryItem,
+  { database: { table: "product_variant_inventory_item",
+                extraColumns: { required_quantity: { type: "decimal" } } } }
+)</code></pre>
+  </div>
+
+  <p>compiles to (<code>define-link.ts:200</code>):</p>
+
+  <div class="wide">
+<pre><code><span class="a">relationships</span>: [                       <span class="a">// the EDGE — a real pivot table</span>
+  { serviceName: Modules.PRODUCT,   entity: "ProductVariant",
+    primaryKey: "id", foreignKey: "variant_id",        alias: "variant" },
+  { serviceName: Modules.INVENTORY, entity: "InventoryItem",
+    primaryKey: "id", foreignKey: "inventory_item_id", alias: "inventory" },
+],
+<span class="b">extends</span>: [                             <span class="b">// the ENRICHMENT — query-graph grafts</span>
+  { serviceName: Modules.PRODUCT, entity: "ProductVariant",
+    fieldAlias: { inventory: "inventory_items.inventory" },
+    relationship: { serviceName: LINKS.ProductVariantInventoryItem,
+                    primaryKey: "variant_id", foreignKey: "id",
+                    alias: "inventory_items", isList: true } },
+  { serviceName: Modules.INVENTORY, entity: "InventoryItem",
+    fieldAlias: { variants: { path: "variant_link.variant", isList: true } },
+    relationship: { ... } },
+],</code></pre>
+  </div>
+
+  <p><code>generate-entity.ts</code> then builds a MikroORM <code>EntitySchema</code> at runtime from that config: two foreign keys as a composite primary key, <code>extraFields</code> as real columns, soft-delete timestamps, table name run through <code>compressName</code> for Postgres' 63-character identifier limit.</p>
+
+  <p><strong>A link is a module in its own right</strong> — own service name, own table, own migrations, own id prefix. Neither endpoint owns it. That is <code>LinkTypeDecl</code> plus a storage layer, packaged as one call.</p>
+</section>
+
+<section class="link">
+  <p class="snum"><b>Two</b> — three kinds of link</p>
+  <h2 class="head">The read-only link is the one we are missing.</h2>
+
+  <p>The default writable link creates a pivot table because the edge did not exist. But some edges already do — and Medusa declares that case explicitly, storing nothing:</p>
+
+  <div class="wide">
+<pre><code>export const CartCustomer: ModuleJoinerConfig = {
+  isLink: true,
+  <span class="b">isReadOnlyLink: true,</span>          // no relationships, no databaseConfig, no table
+  extends: [
+    { serviceName: Modules.CART, entity: "Cart",
+      relationship: { serviceName: Modules.CUSTOMER, entity: "Customer",
+                      primaryKey: "id", foreignKey: "customer_id",
+                      alias: "customer" } },
+    { serviceName: Modules.CUSTOMER, entity: "Customer",
+      relationship: { serviceName: Modules.CART, entity: "Cart",
+                      primaryKey: "customer_id", foreignKey: "id",
+                      alias: "carts", isList: true } },
+  ],
+}</code></pre>
+  <p class="cap">link-modules/src/definitions/readonly/cart-customer.ts</p>
+  </div>
+
+  <p><code>cart.customer_id</code> is <em>already a column on the cart</em>. The declaration only tells the query planner that the column is a reference into another module's entity, so <code>cart.customer.email</code> resolves. Fifteen ship in the box: <code>cart-product</code>, <code>order-region</code>, <code>store-currency</code>, <code>line-item-adjustment-promotion</code>, <code>product-translation</code>.</p>
+
+  <p>This is the distinction Frappe draws between <code>get_internal_links</code> and <code>get_external_links</code> — but inferred there at count time, and declared here up front. <code>defineLink</code> enforces the asymmetry at boot:</p>
+
+  <div class="wide">
+<pre><code>if (!leftService.linkable || !leftService.field) {
+  throw new Error(`ReadOnly link requires "linkable" and "field" ...`)
+} else if (leftService.filterable || rightService.filterable) {
+  throw new Error(`ReadOnly link does not support filterable fields.`)
+}</code></pre>
+  </div>
+
+  <h3>And a third: the Index module</h3>
+
+  <p><code>packages/modules/index</code> takes the exact fork <code>architecture.md</code> identifies — refs or denormalized summaries — and answers <em>both</em>, in two tables:</p>
+
+  <div class="wide">
+<pre><code>const IndexData = model.define("IndexData", {
+  id: model.text().primaryKey(),
+  name: model.text().primaryKey(),      // entity type
+  data: model.json().default({}),       // the denormalized summary
+  staled_at: model.dateTime().nullable(),
+})
+
+const IndexRelation = model.define("IndexRelation", {
+  id: model.autoincrement().primaryKey(),
+  pivot: model.text(),
+  parent_name: model.text(), parent_id: model.text(),
+  child_name: model.text(),  child_id: model.text(),
+  staled_at: model.dateTime().nullable(),
+})</code></pre>
+  </div>
+
+  <p><code>IndexRelation</code> is our <code>link_index</code> almost column for column. <code>IndexData</code> is the summary half we declined to build. The part worth stealing is <em>how it is configured</em> — not by code, and not by satellites pushing after commit, but by a GraphQL schema carrying a <code>@Listeners</code> directive:</p>
+
+  <div class="wide">
+<pre><code>type Product <span class="b">@Listeners(values: [
+  "product.product.created", "product.product.updated",
+  "product.product.deleted", "product.product.restored"
+])</span> {
+  id: ID
+  title: String
+  handle: String
+  variants: [ProductVariant]
+  sales_channels: [SalesChannel]
+}</code></pre>
+  <p class="cap">index/src/utils/default-schema.ts</p>
+  </div>
+
+  <p><code>registerListeners()</code> walks that schema, subscribes each declared event to <code>consumeEvent</code>, and does so <strong>only in worker mode</strong> (<code>if (!this.#isWorkerMode) return</code>). The shape of the index, the events that invalidate each part of it, and the projection stored are one declaration. Rows are marked <code>staled_at</code> rather than deleted.</p>
+</section>
+
+<section class="link">
+  <p class="snum"><b>Three</b> — the linkable contract</p>
+  <h2 class="head">A module publishes what may be linked, and boot enforces it.</h2>
+
+  <p><code>Module.linkable</code> is generated, not written. <code>buildLinkConfigFromModelObjects</code> walks each model's schema and emits an entry for every primary key or id property:</p>
+
+  <div class="wide">
+<pre><code>{ linkable: "product_variant_id",   // the foreign key a link will use
+  primaryKey: "id",
+  serviceName: "product",
+  field: "productVariant",
+  entity: "ProductVariant" }</code></pre>
+  </div>
+
+  <p>and <code>defineLink</code> validates against it before the app boots:</p>
+
+  <div class="wide">
+<pre><code>const serviceAKeyEntity = serviceAInfo.linkableKeys?.[serviceAObj.key]
+if (!serviceAKeyEntity) {
+  throw new Error(`Key ${serviceAObj.key} is not linkable on service ${serviceAObj.module}`)
+}
+if (!moduleAPrimaryKeys.includes(serviceAPrimaryKey)) {
+  throw new Error(`Primary key ${serviceAPrimaryKey} is not defined on service ${serviceAObj.module}`)
+}</code></pre>
+  </div>
+
+  <p>A module also opts in to being queryable at all — <code>definition: { isQueryable: true }</code> — and the error message quotes the config block you need to write.</p>
+
+  <div class="callout">
+    <p class="lbl">Contract we do not have</p>
+    <p><code>RegisterLinkType</code> accepts any <code>source_type</code>/<code>anchor_type</code> pair with no check that the anchor's owner considers that key stable and referenceable. Registration-time failure beats a dangling reference discovered on the item screen.</p>
+  </div>
+</section>
+
+<section class="link">
+  <p class="snum"><b>Four</b> — reading and deleting</p>
+  <h2 class="head">A real query planner, and a cascade that only apologises.</h2>
+
+  <p>The graph planner is a documented three-stage pipeline: <code>GraphCatalog</code> (index configs) → <code>compileQuery</code> (query → plan) → <code>executePlan</code> (fetch, join, shortcuts). Loading sits behind <code>IRemoteDataFetcher</code>, so the planner is indifferent to whether a module is in-process or remote.</p>
+
+  <p>The part most federated designs skip is there too: <code>cross-module-joins/rewrite-filters.ts</code> (410 lines) and <code>residual-filters.ts</code> (400 lines) decide which filters push down to which module and which must run after the join — because a filter on <code>product.variants.inventory.location_id</code> spans three services and only some of it can travel. Our <code>GetLinks</code> has no equivalent, and will need one the first time a caller filters <em>across</em> a link rather than listing.</p>
+
+  <h3>Deletes are best-effort</h3>
+
+  <div class="wide">
+<pre><code>if (joinerConfig.isLink &amp;&amp; !relationship.deleteCascade) {
+  continue                                  // opt-in only
+}
+...
+} catch (error) {
+  errors.push({ serviceName, method, args: cascadeDelKeys, error: ... })
+  return                                    // keep walking
+}
+...
+return [errors.length ? errors : null, result]</code></pre>
+  <p class="cap">core/modules-sdk/src/link.ts — executeCascade</p>
+  </div>
+
+  <p>A breadth-first walk over the relations map, calling <code>softDelete</code> on each related service, collecting failures into an array rather than aborting. No distributed transaction, no retry, no durable record of what failed. A caller that ignores the error tuple silently orphans rows.</p>
+
+  <div class="callout good">
+    <p class="lbl">Where we are already stronger</p>
+    <p>The transactional outbox in <code>services/pim</code> plus <code>doclink.deliveries</code> with <code>attempts</code> and <code>last_error</code> gives bounded retry and a durable record of giving up. Medusa's cascade works because every module is usually in one process against one database.</p>
+  </div>
+</section>
+
+<section class="field">
+  <p class="snum"><b>Five</b> — the write path</p>
+  <h2 class="head"><code>additional_data</code> is the answer we don't have.</h2>
+
+  <p>The question Frappe answers with <code>ALTER TABLE</code> — <em>how does satellite data get in when the user submits the anchor's form?</em> — Medusa answers without touching the anchor's schema at all:</p>
+
+  <div class="wide">
+<pre><code>const productsCreated = createHook("productsCreated", {
+  products: response,
+  <span class="a">additional_data: input.additional_data,</span>
+})
+
+return new WorkflowResponse(response, { hooks: [productsCreated] })</code></pre>
+  <p class="cap">core-flows/src/product/workflows/create-products.ts:281</p>
+  </div>
+
+  <p><code>additional_data</code> is an opaque bag the core workflow never reads — it validates it against a plugin-supplied validator and forwards it. A plugin registers a handler on <code>createProductsWorkflow.hooks.productsCreated</code>, receives the created products <em>and</em> the bag, and writes its own row plus the link. The product API schema does not grow, and neither does the product table.</p>
+
+  <p><strong>That is the missing half of our design.</strong> We have a read plane and a lifecycle plane, and nothing that lets a satellite receive data a user typed on the anchor's form.</p>
+</section>
+
+<section class="field">
+  <p class="snum"><b>Six</b> — the UI plane</p>
+  <h2 class="head">Here Medusa is the worked example of what we refused.</h2>
+
+  <p>Admin extension points are injection zones with a familiar taxonomy — <code>product.details</code>, <code>product.details.side</code>, <code>product.list</code>, <code>order.details</code>. The file even records the migration away from <code>.before</code>/<code>.after</code> suffixes because "the layout composer handles ordering with drag&amp;drop", which is our <code>weight</code> field learned the hard way.</p>
+
+  <p>But the zone list is a <strong>compile-time TypeScript union</strong>, extended by declaration merging:</p>
+
+  <div class="wide">
+<pre><code>export type InjectionZone = keyof InjectionZoneRegistry
+
+// a plugin, in index.d.ts:
+declare module "@medusajs/admin-shared" {
+  interface InjectionZoneRegistry {
+    "my-plugin.product-page": true
+    "my-plugin.product-page.side": true
+  }
+}</code></pre>
+  </div>
+
+  <p>and discovery is a build step. <code>admin-vite-plugin</code> Babel-parses every widget file, reads the <code>defineWidgetConfig</code> object literal, and emits a virtual module:</p>
+
+  <div class="wide">
+<pre><code>export default { widgets: [
+  { Component: WidgetComponent_0, zone: ["product.details"], widgetId: "..." },
+] }</code></pre>
+  </div>
+
+  <p>Every widget is statically imported into the admin bundle, runs in the host's JS realm, and the extension set is frozen at build time. A new plugin means rebuilding and redeploying the admin. Medusa buys a shared theme, a shared router, no postMessage and no height negotiation — and pays with decoupling by etiquette and a deploy coupling between host and satellite. That trade is precisely the one <code>architecture.md</code> declines.</p>
+</section>
+
+<section>
+  <p class="snum"><b>Seven</b> — registration, isolation, tenancy</p>
+  <h2 class="head">A global, a shared schema, and no tenants.</h2>
+
+  <p>Registration is an import side effect — <code>global.MedusaModule.setCustomLink(register)</code> at module scope. The loader's own comment says the rest:</p>
+
+  <blockquote>Load links from the source paths, links are registering themselves, therefore we only need to import them</blockquote>
+
+  <p>Source paths are <code>join(plugin.resolve, "links")</code> for every resolved plugin, so discovery is filesystem convention over <code>node_modules</code> at boot. No registry table, nothing queryable at runtime, nothing a tenant can toggle.</p>
+
+  <p>Isolation is opt-in and unenforced. Each module reads <code>PRODUCT_DATABASE_URL</code> → <code>MEDUSA_DATABASE_URL</code> → <code>DATABASE_URL</code>, and <code>schema</code> defaults to <code>"public"</code>. By default every module shares one connection, one database and one schema; nothing stops a raw query joining <code>product</code> to <code>inventory_item</code>. Compare <code>0007_roles.sql</code> here, where a cross-schema join fails with <code>permission denied for schema pim</code>. That is the difference between a boundary and a guideline.</p>
+
+  <div class="callout">
+    <p class="lbl">On the marketplace question specifically</p>
+    <p>Modules are listed in <code>medusa-config.ts</code>; plugins resolve from <code>node_modules</code> at boot. One deployment serves one merchant. There is no per-tenant activation, no install state, no equivalent of Frappe's <code>disabled_apps</code>. <strong>Frappe is the better reference here and Medusa has nothing to say.</strong></p>
+  </div>
+</section>
+
+<section>
+  <p class="snum"><b>Eight</b> — three systems side by side</p>
+  <h2 class="head">Where each one lands.</h2>
+
+  <div class="wide">
+  <table>
+    <thead><tr><th></th><th>Frappe</th><th>Medusa</th><th>doclink today</th></tr></thead>
+    <tbody>
+      <tr><td>Anchor enrichment</td><td>columns + child tables on <code>tabItem</code>; <code>Custom Field</code> DDL</td><td><code>extends</code> field alias in the query graph; no column</td><td>iframe card in a declared slot</td></tr>
+      <tr><td>Edge storage</td><td>column on the satellite</td><td>pivot table owned by a link module</td><td>satellite's linkage table</td></tr>
+      <tr><td>Edge declared or derived</td><td>derived (<code>SELECT</code> over <code>tabDocField</code>)</td><td>declared (<code>defineLink</code>)</td><td>declared (<code>RegisterLinkType</code>)</td></tr>
+      <tr><td>"Edge already exists"</td><td>inferred at count time</td><td class="win">declared (<code>isReadOnlyLink</code>)</td><td class="none">not modeled</td></tr>
+      <tr><td>Properties on the edge</td><td>child-table row fields</td><td><code>extraColumns</code></td><td class="none">not modeled</td></tr>
+      <tr><td>Linkable surface</td><td>any Link field, unvalidated</td><td class="win"><code>Module.linkable</code>, validated at boot</td><td class="none">not modeled</td></tr>
+      <tr><td>Read across</td><td>count query per doctype, 1s timeout</td><td>graph planner with filter push-down</td><td>fan-out, 5s client timeout</td></tr>
+      <tr><td>Materialized index</td><td>none</td><td><code>IndexData</code> + <code>IndexRelation</code>, <code>@Listeners</code></td><td><code>link_index</code> (refs only)</td></tr>
+      <tr><td>Delete</td><td>derived graph blocks the delete</td><td>best-effort cascade, errors collected</td><td class="win">outbox → deliveries, bounded retry</td></tr>
+      <tr><td>Satellite write path</td><td><code>Custom Field</code> on the anchor form</td><td class="win"><code>additional_data</code> + workflow hook</td><td class="none">nothing</td></tr>
+      <tr><td>UI extension discovery</td><td>meta-build time, server-rendered</td><td>build time, Babel scan, same JS realm</td><td class="win">runtime, cross-origin iframe</td></tr>
+      <tr><td>Isolation</td><td>one database per tenant</td><td>shared schema by default</td><td class="win">per-schema roles, enforced</td></tr>
+      <tr><td>Tenancy / marketplace</td><td>per-site install + <code>disabled_apps</code></td><td class="none">none</td><td class="none">nothing</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <p class="snum"><b>Nine</b> — what to take</p>
+  <h2 class="head">Five borrowings, and four things to leave.</h2>
+
+  <div class="take"><span class="n">01</span><h3>Declare the "edge already exists" case</h3></div>
+  <div class="takebody">
+    <p>Second independent confirmation — Frappe infers it at count time, Medusa declares it and stores nothing. We force a linkage table even when the reference is already a field the satellite holds for its own reasons.</p>
+    <div class="wide">
+<pre><code>enum LinkStorage {
+  LINK_STORAGE_UNSPECIFIED    = 0;
+  LINK_STORAGE_OWNED_TABLE    = 1;  // today's only mode
+  LINK_STORAGE_EXISTING_FIELD = 2;  // anchor ref is already a column
+}</code></pre>
+    </div>
+    <p><code>GetLinks</code> skips a traversal hop for mode 2 and goes straight to resolution; <code>ResolveLinks</code> implementations stop writing a redundant row.</p>
+  </div>
+
+  <div class="take"><span class="n">02</span><h3>Let the edge carry properties</h3></div>
+  <div class="takebody">
+    <p><code>extraColumns: { required_quantity: { type: "decimal", defaultValue: "1" } }</code>. "This variant needs two of that inventory item" is a fact about the <em>edge</em>, not either endpoint, and we have nowhere to put it — a satellite either smuggles it into its own row or invents a side table. Add a small typed <code>edge_fields</code> declaration to <code>LinkTypeDecl</code>.</p>
+  </div>
+
+  <div class="take"><span class="n">03</span><h3>Validate the linkable surface at registration</h3></div>
+  <div class="takebody">
+    <p>Extend <code>DocumentType</code> to publish the keys its owner considers stable and referenceable, and reject a <code>LinkTypeDecl</code> naming a key that was never published — the way <code>defineLink</code> fails at boot rather than on the item screen.</p>
+  </div>
+
+  <div class="take"><span class="n">04</span><h3>Give the index a declarative invalidation contract</h3></div>
+  <div class="takebody">
+    <p>Our <code>link_index</code> is written by satellites after their own commit, with nothing anywhere stating what makes a row stale. Put the subscribing events on <code>LinkTypeDecl</code> beside <code>subscribes_to_lifecycle</code>, add <code>staled_at</code> to <code>doclink.link_index</code>, and let the registry stale rows on lifecycle delivery instead of waiting for a correction push.</p>
+    <p>Keep storing refs only. The benchmark already says summaries buy flatness at the cost of a far wider staleness surface — <code>IndexData</code> is that trade taken.</p>
+  </div>
+
+  <div class="take"><span class="n">05</span><h3>Build the write plane</h3></div>
+  <div class="takebody">
+    <p>An opaque <code>additional_data</code> map on PIM's create and update mutations that PIM never reads, validated against a schema each contributing module registers, and forwarded verbatim on the lifecycle event. The satellite reacts to <code>item.created</code> with the bag and writes its own row. PIM's API schema does not grow, and no satellite sits inside PIM's write transaction.</p>
+  </div>
+
+  <h3>What not to take</h3>
+  <ul>
+    <li><strong>Build-time extension discovery.</strong> Babel-scanning widgets into the host bundle freezes the extension set at build and puts every satellite in the host's JS realm.</li>
+    <li><strong>A global mutable registry.</strong> <code>global.MedusaModule.setCustomLink</code> at import time is fine for one process and meaningless across services.</li>
+    <li><strong>Shared-schema-by-default.</strong> <code>schema: "public"</code> for every module makes the boundary a code-review rule. Keep the role grants.</li>
+    <li><strong>Best-effort cascade.</strong> Returning an error array is weaker than a durable outbox. Keep ours.</li>
+  </ul>
+</section>
+
+<div class="close">
+  <p>Frappe separated the two planes and coupled the teams. Medusa fused the two planes and decoupled the teams — then spent the decoupling again on a build-time UI registry and a shared default schema. The parts worth taking are the small declarative ones: an edge that can already exist, an edge that can carry properties, a linkable surface that boot can check, and an index that says out loud what makes it stale.</p>
+</div>
+
+</div>
